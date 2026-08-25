@@ -1,0 +1,23 @@
+{
+  "updated": "2026-08-25T10:58:18",
+  "site": "Ganaraska",
+  "clips_identified": 34,
+  "totals": [
+    {
+      "sp": 0,
+      "name": "Chinook",
+      "hex": "#E68200",
+      "activity": 37,
+      "net_up": 29
+    },
+    {
+      "sp": 4,
+      "name": "Brown",
+      "hex": "#B8901E",
+      "activity": 1,
+      "net_up": 1
+    }
+  ],
+  "latest_clip": "latest_model_id.mp4",
+  "activity_img": "activity_model.png"
+}

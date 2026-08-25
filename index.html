@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ganaraska Live Fish Counter</title>
+<meta name="description" content="Live view of the DINOv3 fish-ID model on the Ganaraska River counter, this year's run vs past years, and every fish it has identified.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Source+Sans+3:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#eef2f5; --card:#ffffff; --ink:#12202b; --ink2:#465a67; --muted:#8092a0;
+    --line:#dce4ea; --accent:#2a78d6; --accent2:#0f5e44; --chinook:#E68200; --band:#c9d4dc;
+    --ui:"Source Sans 3","Segoe UI",system-ui,sans-serif; --sans:"Archivo","Segoe UI",system-ui,sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --bg:#0c161d; --card:#12212b; --ink:#e8eef2; --ink2:#b3c2cc; --muted:#7d919d;
+    --line:#213039; --accent:#5ea2ea; --accent2:#57c49a; --chinook:#f2a03d; --band:#2a3b46;
+  }}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--ui);line-height:1.55}
+  .wrap{max-width:1040px;margin:0 auto;padding:22px 20px 72px}
+  header{display:flex;align-items:center;gap:13px;flex-wrap:wrap;padding:6px 0 16px;border-bottom:1px solid var(--line)}
+  .live{display:inline-block;width:9px;height:9px;border-radius:50%;background:#e5484d;box-shadow:0 0 0 0 rgba(229,72,77,.5);animation:pulse 2.2s infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(229,72,77,.5)}70%{box-shadow:0 0 0 8px rgba(229,72,77,0)}100%{box-shadow:0 0 0 0 rgba(229,72,77,0)}}
+  @media (prefers-reduced-motion:reduce){.live{animation:none}}
+  .tag{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.11em;margin-right:auto}
+  .updated{font-size:13px;color:var(--muted)}
+  h1{font-family:var(--sans);font-weight:800;font-size:clamp(23px,4.4vw,34px);margin:14px 0 0;letter-spacing:-.02em}
+  .lede{color:var(--ink2);margin:7px 0 0;max-width:64ch}
+  h2{font-family:var(--sans);font-weight:700;font-size:18px;margin:34px 0 0}
+  .grid{display:grid;grid-template-columns:1.35fr .65fr;gap:18px;margin-top:14px}
+  @media (max-width:760px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .card .hd{padding:12px 17px;border-bottom:1px solid var(--line);font-family:var(--sans);font-weight:700;font-size:14.5px;display:flex;justify-content:space-between;align-items:center}
+  .card .bd{padding:16px 17px}
+  video,img.fig{width:100%;height:auto;display:block;background:#0d1a12}
+  .ph{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:14px;text-align:center;padding:24px}
+  .cap{font-size:12.5px;color:var(--muted);padding:9px 17px 14px}
+  .big{font-family:var(--sans);font-weight:800;font-size:38px;line-height:1;color:var(--chinook)}
+  .biglbl{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:4px}
+  table{width:100%;border-collapse:collapse;font-size:14.5px}
+  th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:8px 6px;border-bottom:1px solid var(--line)}
+  td{padding:9px 6px;border-bottom:1px solid var(--line)}
+  tr:last-child td{border-bottom:0}
+  .n{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:8px;vertical-align:middle}
+  .muted{color:var(--muted)}
+  .chartcard{margin-top:14px}
+  canvas{width:100%;height:auto;display:block}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;font-size:12.5px;color:var(--ink2);padding:0 17px 14px}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .sw{width:16px;height:3px;border-radius:2px;display:inline-block}
+  .swb{width:14px;height:11px;border-radius:3px;display:inline-block;background:var(--band);opacity:.65}
+  .arrow{font-weight:700}
+  .clip{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;color:var(--ink2);white-space:nowrap}
+  .up{color:#1f9d55}.down{color:#c1443c}.stay{color:var(--muted)}
+  .evwrap{max-height:420px;overflow:auto}
+  footer{margin-top:30px;padding-top:14px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+  a{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="tag">OMNRF &middot; Lake Ontario</span>
+    <span class="live"></span>
+    <span class="updated" id="updated">updated 2026-08-25 10:58</span>
+  </header>
+  <h1>Ganaraska River &mdash; live fish counter</h1>
+  <p class="lede">A DINOv3 computer-vision model watches the counter tunnel camera in real time, identifies each
+  salmon or trout by species, and tallies it. Below: what it's seeing now, how this year's run compares with the
+  last six, and every fish it has identified. Experimental &mdash; a research view, not an official count.</p>
+
+  <h2>Live now</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="hd">Latest fish identified</div>
+      <div id="clipwrap"><video autoplay loop muted playsinline src="latest_model_id.mp4?t=1787669898"></video></div>
+      <div class="cap" id="clipcap">Boxes coloured by species, with the fish's movement path.</div>
+    </div>
+    <div class="card">
+      <div class="hd">This season so far</div>
+      <div class="bd">
+        <div class="big" id="total">38</div>
+        <div class="biglbl">fish identified</div>
+        <table style="margin-top:14px">
+          <thead><tr><th>Species</th><th class="n">Seen</th><th class="n">Net&nbsp;up</th></tr></thead>
+          <tbody id="tbody"><tr><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="n">37</td><td class="n">+29</td></tr><tr><td><span class="dot" style="background:#B8901E"></span>Brown</td><td class="n">1</td><td class="n">+1</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h2>This year vs the last six</h2>
+  <div class="card chartcard">
+    <div class="hd">Cumulative Chinook past the counter <span class="muted" id="chartsub"></span></div>
+    <div class="bd" style="padding:14px 14px 4px"><canvas id="runchart" width="1000" height="440"></canvas></div>
+    <div class="legend">
+      <span><span class="sw" style="background:var(--chinook)"></span> 2026 (model, live)</span>
+      <span><span class="swb"></span> 2020&ndash;2025 range</span>
+      <span><span class="sw" style="background:var(--muted)"></span> past-years median</span>
+      <span><span class="sw" style="background:var(--accent);opacity:.6"></span> 2026 forecast &plusmn;21%</span>
+    </div>
+  </div>
+
+  <h2>Events captured</h2>
+  <div class="card chartcard">
+    <div class="hd">Every fish the model has identified <span class="muted" id="evcount"></span></div>
+    <div class="evwrap">
+      <table>
+        <thead><tr><th>When</th><th>Species</th><th>Direction</th><th>Clip (on G:)</th><th class="n">Conf.</th></tr></thead>
+        <tbody id="evbody"><tr><td class="muted">Aug 25 10:55 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-55-50.mp4">10-55-50.mp4</td><td class="n">94%</td></tr><tr><td class="muted">Aug 25 10:54 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-54-56.mp4">10-54-56.mp4</td><td class="n">97%</td></tr><tr><td class="muted">Aug 25 10:54 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-54-09.mp4">10-54-09.mp4</td><td class="n">100%</td></tr><tr><td class="muted">Aug 25 10:53 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-53-25.mp4">10-53-25.mp4</td><td class="n">92%</td></tr><tr><td class="muted">Aug 25 10:52 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-52-12.mp4">10-52-12.mp4</td><td class="n">75%</td></tr><tr><td class="muted">Aug 25 10:47 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-47-39.mp4">10-47-39.mp4</td><td class="n">94%</td></tr><tr><td class="muted">Aug 25 10:43 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-43-41.mp4">10-43-41.mp4</td><td class="n">76%</td></tr><tr><td class="muted">Aug 25 10:39 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-39-26.mp4">10-39-26.mp4</td><td class="n">99%</td></tr><tr><td class="muted">Aug 25 10:33 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-33-28.mp4">10-33-28.mp4</td><td class="n">91%</td></tr><tr><td class="muted">Aug 25 10:27 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-27-54.mp4">10-27-54.mp4</td><td class="n">78%</td></tr><tr><td class="muted">Aug 25 10:26 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-26-05.mp4">10-26-05.mp4</td><td class="n">92%</td></tr><tr><td class="muted">Aug 25 10:21 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-21-35.mp4">10-21-35.mp4</td><td class="n">70%</td></tr><tr><td class="muted">Aug 25 10:15 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-15-50.mp4">10-15-50.mp4</td><td class="n">96%</td></tr><tr><td class="muted">Aug 25 10:15 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-15-35.mp4">10-15-35.mp4</td><td class="n">82%</td></tr><tr><td class="muted">Aug 25 10:01 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-01-39.mp4">10-01-39.mp4</td><td class="n">88%</td></tr><tr><td class="muted">Aug 25 9:58 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-58-44.mp4">09-58-44.mp4</td><td class="n">99%</td></tr><tr><td class="muted">Aug 25 9:56 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-56-21.mp4">09-56-21.mp4</td><td class="n">95%</td></tr><tr><td class="muted">Aug 25 9:52 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-52-08.mp4">09-52-08.mp4</td><td class="n">94%</td></tr><tr><td class="muted">Aug 25 9:51 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-51-50.mp4">09-51-50.mp4</td><td class="n">95%</td></tr><tr><td class="muted">Aug 25 9:49 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-49-52.mp4">09-49-52.mp4</td><td class="n">98%</td></tr><tr><td class="muted">Aug 25 9:49 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-49-52.mp4">09-49-52.mp4</td><td class="n">97%</td></tr><tr><td class="muted">Aug 25 9:46 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-46-39.mp4">09-46-39.mp4</td><td class="n">95%</td></tr><tr><td class="muted">Aug 25 9:45 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-45-28.mp4">09-45-28.mp4</td><td class="n">72%</td></tr><tr><td class="muted">Aug 25 9:42 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-42-12.mp4">09-42-12.mp4</td><td class="n">92%</td></tr><tr><td class="muted">Aug 25 9:36 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-36-13.mp4">09-36-13.mp4</td><td class="n">91%</td></tr><tr><td class="muted">Aug 25 9:36 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-36-13.mp4">09-36-13.mp4</td><td class="n">100%</td></tr><tr><td class="muted">Aug 25 9:36 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-36-13.mp4">09-36-13.mp4</td><td class="n">81%</td></tr><tr><td class="muted">Aug 25 9:34 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-34-27.mp4">09-34-27.mp4</td><td class="n">82%</td></tr><tr><td class="muted">Aug 25 9:34 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-34-27.mp4">09-34-27.mp4</td><td class="n">96%</td></tr><tr><td class="muted">Aug 25 9:34 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-34-27.mp4">09-34-27.mp4</td><td class="n">70%</td></tr><tr><td class="muted">Aug 25 9:34 AM</td><td><span class="dot" style="background:#B8901E"></span>Brown</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-34-15.mp4">09-34-15.mp4</td><td class="n">81%</td></tr><tr><td class="muted">Aug 25 9:26 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-26-33.mp4">09-26-33.mp4</td><td class="n">84%</td></tr><tr><td class="muted">Aug 25 9:10 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-10-25.mp4">09-10-25.mp4</td><td class="n">86%</td></tr><tr><td class="muted">Aug 24 4:11 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-24\16-11-18.mp4">16-11-18.mp4</td><td class="n">98%</td></tr><tr><td class="muted">Aug 24 4:09 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-24\16-09-35.mp4">16-09-35.mp4</td><td class="n">95%</td></tr><tr><td class="muted">Aug 24 4:04 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-24\16-04-20.mp4">16-04-20.mp4</td><td class="n">90%</td></tr><tr><td class="muted">Aug 24 4:03 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-24\16-03-46.mp4">16-03-46.mp4</td><td class="n">92%</td></tr><tr><td class="muted">Aug 24 3:53 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-24\15-53-48.mp4">15-53-48.mp4</td><td class="n">98%</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    Model: a DETR object detector + a DINOv3 species classifier + BoT-SORT tracking, run on the live camera feed.
+    Counts apply the validated confidence and track-length gates. Historical curves and the 2026 forecast come
+    from the Lake Ontario run-pool analysis. Updates every few minutes.
+  </footer>
+</div>
+
+<script id="hist" type="application/json">{"cumhist": {"gan": {"2020": [28, 28, 29, 29, 34, 45, 49, 50, 56, 56, 57, 58, 61, 91, 121, 180, 487, 758, 846, 1026, 1195, 1778, 2407, 2568, 2650, 2777, 3096, 3323, 3577, 3632, 3739, 4074, 4100, 4137, 4386, 4625, 4732, 4761, 4810, 4859, 4994, 5404, 5405, 5670, 5960, 6361, 6670, 6855, 6864, 6871, 6871, 6871, 6883, 6907, 7114, 7060, 7129, 7264, 7525, 7632, 7832, 7930, 7980, 8045, 8052, 8062, 8062, 8065, 8073, 8080, 8118, 8154, 8154, 8154, 8154, 8155, 8155, 8156, 8157, 8158, 8158, 8159, 8160, 8161, 8162, 8166, 8170, 8173, 8173, 8173, 8173, 8173, 8173], "2021": [17, 18, 32, 45, 70, 76, 78, 78, 78, 79, 79, 79, 79, 79, 80, 80, 80, 82, 92, 110, 112, 114, 137, 186, 261, 336, 1313, 1805, 2242, 2470, 2555, 2741, 3404, 3518, 3578, 3611, 3647, 3908, 3998, 3998, 3999, 4158, 4315, 4409, 4632, 4706, 4716, 4725, 4741, 4740, 4774, 4778, 4782, 4796, 4898, 4944, 5004, 5019, 5021, 5018, 5018, 5024, 5025, 5026, 5029, 5030, 5032, 5036, 5036, 5036, 5036, 5036, 5036, 5037, 5038, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039, 5039], "2022": [30, 41, 174, 317, 429, 474, 491, 495, 495, 498, 500, 503, 506, 508, 511, 614, 894, 1092, 1248, 1312, 1360, 1372, 1644, 1809, 2416, 2814, 3046, 3270, 3318, 3426, 3534, 3839, 3849, 3923, 3981, 4100, 5034, 5271, 5346, 5377, 5384, 5388, 5491, 5753, 6095, 6340, 6429, 6522, 6656, 6782, 6849, 7046, 7357, 7540, 7570, 7580, 7617, 7679, 7744, 7880, 7969, 7982, 7996, 8004, 8010, 8019, 8021, 8024, 8026, 8032, 8036, 8046, 8051, 8056, 8056, 8056, 8057, 8057, 8058, 8058, 8058, 8059, 8059, 8060, 8060, 8060, 8060, 8060, 8060, 8060, 8060, 8060, 8060], "2023": [924, 935, 944, 968, 1449, 1650, 1720, 1737, 1743, 1750, 1835, 1977, 2033, 2070, 2078, 2211, 3487, 3510, 3646, 3783, 4034, 4159, 4192, 4207, 4214, 4219, 4223, 4233, 4332, 4560, 6559, 8483, 9464, 10287, 10917, 11884, 13750, 14541, 15387, 16701, 18091, 19430, 20583, 21410, 22101, 22860, 23561, 23797, 24514, 25093, 25449, 25688, 26267, 26606, 26753, 26894, 27026, 27231, 27391, 27474, 27623, 27730, 27824, 27964, 28090, 28138, 28201, 28204, 28206, 28209, 28212, 28242, 28265, 28283, 28294, 28295, 28295, 28295, 28295, 28295, 28295, 28295, 28295, 28295, 28295, 28295, 28295, 28295, 28295, 28294, 28294, 28294, 28294], "2024": [345, 350, 351, 354, 353, 387, 420, 426, 435, 439, 441, 442, 444, 447, 449, 452, 1000, 1879, 2970, 4338, 4934, 5132, 5319, 5478, 5526, 6461, 7535, 8364, 9045, 9576, 9976, 10053, 10068, 10592, 11042, 11056, 11461, 12085, 12840, 13698, 13813, 14087, 14160, 14462, 14578, 15071, 15562, 15952, 16235, 16479, 16726, 16982, 17274, 17510, 17799, 18001, 18090, 18165, 18249, 18537, 18703, 18808, 18851, 18889, 18907, 18925, 18977, 19080, 19260, 19422, 19437, 19472, 19472, 19472, 19472, 19476, 19481, 19485, 19499, 19511, 19512, 19512, 19512, 19512, 19514, 19514, 19514, 19514, 19514, 19514, 19514, 19514, 19514], "2025": [309, 332, 356, 379, 403, 426, 450, 824, 987, 1070, 1125, 1149, 1184, 1193, 1199, 1206, 1212, 1223, 1229, 1264, 1546, 2390, 3350, 4107, 4749, 4978, 5243, 5570, 5818, 6035, 6223, 6485, 6633, 6825, 7119, 7768, 8221, 8978, 9894, 10977, 11790, 12509, 13158, 13701, 14112, 14492, 14809, 15053, 15261, 15443, 15765, 16100, 16387, 16537, 16710, 16789, 16820, 16879, 17084, 17286, 17458, 17552, 17575, 17576, 17620, 17656, 17653, 17654, 17646, 17643, 17644, 17646, 17646, 17645, 17645, 17645, 17645, 17644, 17644, 17643, 17644, 17644, 17643, 17642, 17640, 17639, 17639, 17639, 17639, 17639, 17639, 17638, 17638]}}, "forecast": {"call": 17973, "dlo": 14200, "dhi": 21700, "ymax": 28000, "ystep": 5000, "label": "\u00b121%"}}</script>
+<script id="boot" type="application/json">{"updated": "2026-08-25T10:58:18", "totals": [{"sp": 0, "name": "Chinook", "hex": "#E68200", "activity": 37, "net_up": 29}, {"sp": 4, "name": "Brown", "hex": "#B8901E", "activity": 1, "net_up": 1}], "latest_clip": "latest_model_id.mp4", "activity_img": "activity_model.png", "series": {"ganaraska": [0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 37, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null]}, "events": [{"ts": 1787669750.5851336, "date": "Aug 25", "time": "10:55 AM", "iso": "2026-08-25T10:55:50", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.943, "clip": "10-55-50.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-55-50.mp4"}, {"ts": 1787669696.928001, "date": "Aug 25", "time": "10:54 AM", "iso": "2026-08-25T10:54:56", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.969, "clip": "10-54-56.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-54-56.mp4"}, {"ts": 1787669649.3457222, "date": "Aug 25", "time": "10:54 AM", "iso": "2026-08-25T10:54:09", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "stay", "conf": 0.999, "clip": "10-54-09.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-54-09.mp4"}, {"ts": 1787669605.663799, "date": "Aug 25", "time": "10:53 AM", "iso": "2026-08-25T10:53:25", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.925, "clip": "10-53-25.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-53-25.mp4"}, {"ts": 1787669532.001824, "date": "Aug 25", "time": "10:52 AM", "iso": "2026-08-25T10:52:12", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.754, "clip": "10-52-12.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-52-12.mp4"}, {"ts": 1787669259.9166102, "date": "Aug 25", "time": "10:47 AM", "iso": "2026-08-25T10:47:39", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.945, "clip": "10-47-39.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-47-39.mp4"}, {"ts": 1787669021.2127, "date": "Aug 25", "time": "10:43 AM", "iso": "2026-08-25T10:43:41", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.758, "clip": "10-43-41.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-43-41.mp4"}, {"ts": 1787668766.8527741, "date": "Aug 25", "time": "10:39 AM", "iso": "2026-08-25T10:39:26", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.989, "clip": "10-39-26.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-39-26.mp4"}, {"ts": 1787668408.8700786, "date": "Aug 25", "time": "10:33 AM", "iso": "2026-08-25T10:33:28", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.906, "clip": "10-33-28.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-33-28.mp4"}, {"ts": 1787668074.0256388, "date": "Aug 25", "time": "10:27 AM", "iso": "2026-08-25T10:27:54", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "stay", "conf": 0.779, "clip": "10-27-54.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-27-54.mp4"}, {"ts": 1787667965.3385205, "date": "Aug 25", "time": "10:26 AM", "iso": "2026-08-25T10:26:05", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.924, "clip": "10-26-05.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-26-05.mp4"}, {"ts": 1787667695.9555278, "date": "Aug 25", "time": "10:21 AM", "iso": "2026-08-25T10:21:35", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.705, "clip": "10-21-35.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-21-35.mp4"}, {"ts": 1787667350.2302804, "date": "Aug 25", "time": "10:15 AM", "iso": "2026-08-25T10:15:50", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "stay", "conf": 0.963, "clip": "10-15-50.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-15-50.mp4"}, {"ts": 1787667335.281845, "date": "Aug 25", "time": "10:15 AM", "iso": "2026-08-25T10:15:35", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "stay", "conf": 0.818, "clip": "10-15-35.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-15-35.mp4"}, {"ts": 1787666499.8809109, "date": "Aug 25", "time": "10:01 AM", "iso": "2026-08-25T10:01:39", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.885, "clip": "10-01-39.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\10-01-39.mp4"}, {"ts": 1787666324.3296008, "date": "Aug 25", "time": "9:58 AM", "iso": "2026-08-25T09:58:44", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "stay", "conf": 0.988, "clip": "09-58-44.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-58-44.mp4"}, {"ts": 1787666181.4715798, "date": "Aug 25", "time": "9:56 AM", "iso": "2026-08-25T09:56:21", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.953, "clip": "09-56-21.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-56-21.mp4"}, {"ts": 1787665928.857616, "date": "Aug 25", "time": "9:52 AM", "iso": "2026-08-25T09:52:08", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.938, "clip": "09-52-08.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-52-08.mp4"}, {"ts": 1787665910.3829417, "date": "Aug 25", "time": "9:51 AM", "iso": "2026-08-25T09:51:50", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.954, "clip": "09-51-50.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-51-50.mp4"}, {"ts": 1787665792.826148, "date": "Aug 25", "time": "9:49 AM", "iso": "2026-08-25T09:49:52", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.978, "clip": "09-49-52.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-49-52.mp4"}, {"ts": 1787665792.826148, "date": "Aug 25", "time": "9:49 AM", "iso": "2026-08-25T09:49:52", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.973, "clip": "09-49-52.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-49-52.mp4"}, {"ts": 1787665599.8761108, "date": "Aug 25", "time": "9:46 AM", "iso": "2026-08-25T09:46:39", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.949, "clip": "09-46-39.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-46-39.mp4"}, {"ts": 1787665528.1819267, "date": "Aug 25", "time": "9:45 AM", "iso": "2026-08-25T09:45:28", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "stay", "conf": 0.723, "clip": "09-45-28.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-45-28.mp4"}, {"ts": 1787665332.0732794, "date": "Aug 25", "time": "9:42 AM", "iso": "2026-08-25T09:42:12", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.915, "clip": "09-42-12.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-42-12.mp4"}, {"ts": 1787664973.9981399, "date": "Aug 25", "time": "9:36 AM", "iso": "2026-08-25T09:36:13", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.91, "clip": "09-36-13.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-36-13.mp4"}, {"ts": 1787664973.9981399, "date": "Aug 25", "time": "9:36 AM", "iso": "2026-08-25T09:36:13", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.996, "clip": "09-36-13.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-36-13.mp4"}, {"ts": 1787664973.9981399, "date": "Aug 25", "time": "9:36 AM", "iso": "2026-08-25T09:36:13", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "stay", "conf": 0.812, "clip": "09-36-13.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-36-13.mp4"}, {"ts": 1787664867.0382826, "date": "Aug 25", "time": "9:34 AM", "iso": "2026-08-25T09:34:27", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.819, "clip": "09-34-27.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-34-27.mp4"}, {"ts": 1787664867.0382826, "date": "Aug 25", "time": "9:34 AM", "iso": "2026-08-25T09:34:27", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.962, "clip": "09-34-27.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-34-27.mp4"}, {"ts": 1787664867.0382826, "date": "Aug 25", "time": "9:34 AM", "iso": "2026-08-25T09:34:27", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.704, "clip": "09-34-27.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-34-27.mp4"}, {"ts": 1787664855.4359503, "date": "Aug 25", "time": "9:34 AM", "iso": "2026-08-25T09:34:15", "species": "Brown", "sp": 4, "hex": "#B8901E", "direction": "up", "conf": 0.812, "clip": "09-34-15.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-34-15.mp4"}, {"ts": 1787664393.638999, "date": "Aug 25", "time": "9:26 AM", "iso": "2026-08-25T09:26:33", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.845, "clip": "09-26-33.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-26-33.mp4"}, {"ts": 1787663425.1509924, "date": "Aug 25", "time": "9:10 AM", "iso": "2026-08-25T09:10:25", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.859, "clip": "09-10-25.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-25\\09-10-25.mp4"}, {"ts": 1787602278.7879806, "date": "Aug 24", "time": "4:11 PM", "iso": "2026-08-24T16:11:18", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.981, "clip": "16-11-18.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-24\\16-11-18.mp4"}, {"ts": 1787602175.9933937, "date": "Aug 24", "time": "4:09 PM", "iso": "2026-08-24T16:09:35", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.951, "clip": "16-09-35.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-24\\16-09-35.mp4"}, {"ts": 1787601860.1560378, "date": "Aug 24", "time": "4:04 PM", "iso": "2026-08-24T16:04:20", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "stay", "conf": 0.899, "clip": "16-04-20.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-24\\16-04-20.mp4"}, {"ts": 1787601826.2963667, "date": "Aug 24", "time": "4:03 PM", "iso": "2026-08-24T16:03:46", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.925, "clip": "16-03-46.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-24\\16-03-46.mp4"}, {"ts": 1787601228.0542727, "date": "Aug 24", "time": "3:53 PM", "iso": "2026-08-24T15:53:48", "species": "Chinook", "sp": 0, "hex": "#E68200", "direction": "up", "conf": 0.985, "clip": "15-53-48.mp4", "path": "G:\\Counters-2026-model-clips\\Ganaraska\\2026-08-24\\15-53-48.mp4"}]}</script>
+<script>
+(function(){
+  var HEX={0:"#E68200",1:"#00A8C8",2:"#28A745",3:"#B43CDC",4:"#B8901E"};
+  var DOY0=227, DOY1=319;
+  var hist=JSON.parse(document.getElementById("hist").textContent||"{}");
+  var boot=JSON.parse(document.getElementById("boot").textContent||"{}");
+  var cur=boot;
+
+  function fmt(n){return (n||0).toLocaleString();}
+  function rows(t){
+    if(!t||!t.length)return '<tr><td colspan="3" class="muted">No fish identified yet - the tunnel is quiet.</td></tr>';
+    return t.map(function(x){return '<tr><td><span class="dot" style="background:'+(x.hex||HEX[x.sp]||"#888")+'"></span>'+x.name+
+      '</td><td class="n">'+fmt(x.activity)+'</td><td class="n">'+(x.net_up>=0?"+":"")+fmt(x.net_up)+'</td></tr>';}).join("");
+  }
+  function evrows(ev){
+    if(!ev||!ev.length)return '<tr><td colspan="5" class="muted">No events yet - they appear here as fish pass.</td></tr>';
+    return ev.slice(0,300).map(function(e){
+      var d=e.direction, cl=d==="up"?"up":(d==="down"?"down":"stay"), ar=d==="up"?"\u2191 up":(d==="down"?"\u2193 down":"\u2014 stay");
+      return '<tr><td class="muted">'+e.date+' '+e.time+'</td><td><span class="dot" style="background:'+(e.hex||HEX[e.sp]||"#888")+'"></span>'+e.species+
+        '</td><td class="'+cl+' arrow">'+ar+'</td><td class="clip" title="'+(e.path||'')+'">'+(e.clip||'')+'</td><td class="n">'+Math.round((e.conf||0)*100)+'%</td></tr>';
+    }).join("");
+  }
+
+  function draw(){
+    var el;
+    var tot=(cur.totals||[]).reduce(function(a,x){return a+(x.activity||0);},0);
+    if((el=document.getElementById("tbody")))el.innerHTML=rows(cur.totals);
+    if((el=document.getElementById("total")))el.textContent=fmt(tot);
+    if((el=document.getElementById("updated"))&&cur.updated)el.textContent="updated "+new Date(cur.updated).toLocaleString();
+    var t=Date.now();
+    var cw=document.getElementById("clipwrap");
+    if(cw){ if(cur.latest_clip){ var v=cw.querySelector("video");
+        if(!v){cw.innerHTML='<video autoplay loop muted playsinline></video>';v=cw.querySelector("video");}
+        if(v.dataset.stamp!==String(cur.updated)){v.src=cur.latest_clip+"?t="+t;v.dataset.stamp=String(cur.updated);}
+        if(v){v.playbackRate=0.5;v.defaultPlaybackRate=0.5;v.onloadeddata=function(){v.playbackRate=0.5;};}
+      } else { cw.innerHTML='<div class="ph">Waiting for the first identified fish - the model is watching the tunnel now.</div>'; } }
+    if((el=document.getElementById("evbody")))el.innerHTML=evrows(cur.events);
+    if((el=document.getElementById("evcount")))el.textContent=(cur.events||[]).length?("("+(cur.events||[]).length+")"):"";
+    drawChart();
+  }
+
+  function drawChart(){
+    var cv=document.getElementById("runchart"); if(!cv)return;
+    var years=(hist.cumhist&&hist.cumhist.gan)||{}; var yk=Object.keys(years);
+    var fc=hist.forecast||{}; var YMAX=fc.ymax||28000, YSTEP=fc.ystep||5000;
+    var s2026=(cur.series&&cur.series.ganaraska)||[];
+    var css=getComputedStyle(document.documentElement);
+    var col=function(n){return css.getPropertyValue(n).trim();};
+    var W=1000,H=440,PL=64,PR=18,PT=16,PB=34; var dpr=Math.min(2,window.devicePixelRatio||1);
+    cv.width=W*dpr; cv.height=H*dpr; cv.style.height=(H*(cv.clientWidth/W))+"px";
+    var g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
+    var n=DOY1-DOY0+1;
+    var X=function(i){return PL+(W-PL-PR)*(i/(n-1));};
+    var Y=function(v){return H-PB-(H-PT-PB)*(Math.max(0,Math.min(YMAX,v))/YMAX);};
+    // grid + y labels
+    g.strokeStyle=col("--line"); g.fillStyle=col("--muted"); g.font="12px "+col("--ui")+",sans-serif"; g.lineWidth=1;
+    for(var v=0;v<=YMAX;v+=YSTEP){ g.beginPath();g.moveTo(PL,Y(v));g.lineTo(W-PR,Y(v));g.stroke();
+      g.textAlign="right";g.fillText((v/1000)+"k",PL-8,Y(v)+4); }
+    // x month ticks
+    var ticks=[[227,"Aug 15"],[244,"Sep 1"],[274,"Oct 1"],[305,"Nov 1"],[319,"Nov 15"]];
+    g.textAlign="center";
+    ticks.forEach(function(tk){var i=tk[0]-DOY0; if(i<0||i>=n)return; g.fillText(tk[1],X(i),H-12);});
+    // historical band (min..max) + median
+    var lo=[],hi=[],md=[];
+    for(var i=0;i<n;i++){var vals=[];for(var j=0;j<yk.length;j++){var a=years[yk[j]];if(a&&a[i]!=null&&a[i]>=0)vals.push(a[i]);}
+      if(vals.length){vals.sort(function(x,y){return x-y;});lo[i]=vals[0];hi[i]=vals[vals.length-1];md[i]=vals[Math.floor(vals.length/2)];}else{lo[i]=hi[i]=md[i]=null;}}
+    g.beginPath();var started=false;
+    for(var i=0;i<n;i++){if(hi[i]==null)continue;if(!started){g.moveTo(X(i),Y(hi[i]));started=true;}else g.lineTo(X(i),Y(hi[i]));}
+    for(var i=n-1;i>=0;i--){if(lo[i]==null)continue;g.lineTo(X(i),Y(lo[i]));}
+    g.closePath();g.fillStyle=col("--band");g.globalAlpha=.55;g.fill();g.globalAlpha=1;
+    // median dashed
+    g.strokeStyle=col("--muted");g.lineWidth=1.4;g.setLineDash([5,4]);g.beginPath();started=false;
+    for(var i=0;i<n;i++){if(md[i]==null)continue;if(!started){g.moveTo(X(i),Y(md[i]));started=true;}else g.lineTo(X(i),Y(md[i]));}
+    g.stroke();g.setLineDash([]);
+    // forecast band + call
+    if(fc.call){ g.fillStyle=col("--accent");g.globalAlpha=.10;
+      g.fillRect(X(n-1)-2,Y(fc.dhi),PR+2,Y(fc.dlo)-Y(fc.dhi));g.globalAlpha=1;
+      g.strokeStyle=col("--accent");g.globalAlpha=.55;g.setLineDash([3,3]);g.beginPath();g.moveTo(PL,Y(fc.call));g.lineTo(W-PR,Y(fc.call));g.stroke();g.setLineDash([]);g.globalAlpha=1;
+      g.fillStyle=col("--accent");g.textAlign="right";g.fillText("forecast "+(fc.call/1000).toFixed(1)+"k",W-PR-4,Y(fc.call)-6); }
+    // 2026 live line
+    g.strokeStyle=col("--chinook");g.lineWidth=3;g.beginPath();started=false;var lastI=-1,lastV=0;
+    for(var i=0;i<n;i++){var v=s2026[i];if(v==null)continue;if(!started){g.moveTo(X(i),Y(v));started=true;}else g.lineTo(X(i),Y(v));lastI=i;lastV=v;}
+    g.stroke();
+    if(lastI>=0){g.fillStyle=col("--chinook");g.beginPath();g.arc(X(lastI),Y(lastV),4.5,0,7);g.fill();
+      var sub=document.getElementById("chartsub"); if(sub)sub.textContent="\u00b7 2026 to date: "+fmt(lastV);}
+  }
+
+  function merge(m){ if(m.model)Object.assign(cur,m.model); if(m.series)cur.series=m.series; if(m.events)cur.events=m.events; draw(); }
+  function tick(){
+    var t=Date.now();
+    Promise.all([
+      fetch("model_live.json?t="+t,{cache:"no-store"}).then(function(r){return r.json();}).catch(function(){return null;}),
+      fetch("run_series.json?t="+t,{cache:"no-store"}).then(function(r){return r.json();}).catch(function(){return null;}),
+      fetch("events.json?t="+t,{cache:"no-store"}).then(function(r){return r.json();}).catch(function(){return null;})
+    ]).then(function(a){ if(a[0])Object.assign(cur,a[0]); if(a[1])cur.series=a[1]; if(a[2])cur.events=a[2]; draw(); });
+  }
+  draw(); tick(); setInterval(tick,180000); window.addEventListener("resize",drawChart);
+})();
+</script>
+</body>
+</html>
