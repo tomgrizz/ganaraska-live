@@ -1,0 +1,16 @@
+{
+  "updated": "2026-08-29",
+  "note": "Reviewer-confirmed Atlantic salmon passages (Tom Gristey). Auto-count labels are deliberately NOT changed - Atlantic is review-only in the counting rules (floor 1.01); this file is the curated season record, possibly the first returns of the 2025 river-mouth stocking pulse. Add new entries here as fish are confirmed; the site reads this file directly.",
+  "passages": [
+    {"iso": "2026-08-25", "date": "Aug 25", "time": "8:22 PM", "clip": "20-21-57.mp4", "fish": "A", "counted_as": "Rainbow 0.68", "note": "night IR; near-zero frame-level Atl signal"},
+    {"iso": "2026-08-27", "date": "Aug 27", "time": "7:05 AM", "clip": "07-05-38.mp4", "fish": "B", "counted_as": "not auto-counted", "note": ""},
+    {"iso": "2026-08-27", "date": "Aug 27", "time": "7:11 AM", "clip": "07-11-06.mp4", "fish": "B", "counted_as": "not auto-counted", "note": ""},
+    {"iso": "2026-08-27", "date": "Aug 27", "time": "7:12 AM", "clip": "07-12-02.mp4", "fish": "B", "counted_as": "not auto-counted", "note": "model dead heat Brown 0.44 vs Atlantic 0.43"},
+    {"iso": "2026-08-27", "date": "Aug 27", "time": "7:13 AM", "clip": "07-13-14.mp4", "fish": "B", "counted_as": "Brown 0.62", "note": ""},
+    {"iso": "2026-08-27", "date": "Aug 27", "time": "7:24 AM", "clip": "07-24-37.mp4", "fish": "B", "counted_as": "Brown 0.74", "note": ""},
+    {"iso": "2026-08-27", "date": "Aug 27", "time": "7:44 AM", "clip": "07-44-50.mp4", "fish": "B", "counted_as": "Brown 0.69", "note": ""},
+    {"iso": "2026-08-27", "date": "Aug 27", "time": "7:51 AM", "clip": "07-51-06.mp4", "fish": "B", "counted_as": "not auto-counted", "note": "model top guess Atlantic 0.45"},
+    {"iso": "2026-08-28", "date": "Aug 28", "time": "8:11 PM", "clip": "20-11-21.mp4", "fish": "C", "counted_as": "Rainbow 0.64", "note": "night IR; probable same fish as 8:26 PM"},
+    {"iso": "2026-08-28", "date": "Aug 28", "time": "8:26 PM", "clip": "20-26-53.mp4", "fish": "C", "counted_as": "Rainbow 0.68", "note": "night IR"}
+  ]
+}
