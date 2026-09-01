@@ -39,19 +39,28 @@
   @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,157,85,.45)}70%{box-shadow:0 0 0 8px rgba(31,157,85,0)}100%{box-shadow:0 0 0 0 rgba(31,157,85,0)}}
   @media (prefers-reduced-motion:reduce){.status.ok .sdot{animation:none}}
   .updated{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
-  .today{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .col{display:flex;flex-direction:column;gap:18px;min-width:0}
+  .today{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .today-lbl{font-family:var(--sans);font-weight:700;font-size:15px;color:var(--ink)}
   .today-n{font-family:var(--mono);font-weight:600;font-size:44px;line-height:1;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-  .today-up{font-family:var(--mono);font-size:15px;color:var(--ok);font-weight:600;white-space:nowrap}
-  .today-when{font-family:var(--ui);font-size:13.5px;color:var(--muted)}
-  .today-sp{font-family:var(--ui);font-size:13.5px;color:var(--ink2);margin-top:3px;min-height:1.4em}
+  .today-up,.today-dn{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:15px;font-weight:600;white-space:nowrap}
+  .today-up{color:var(--ok)} .today-dn{color:var(--down)}
+  .arr{width:.72em;height:.72em;fill:currentColor;flex:none;display:inline-block}
+  .today-sp{font-family:var(--ui);font-size:13.5px;color:var(--ink2);margin-top:4px;min-height:1.4em}
   .days{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
-  .day{display:grid;grid-template-columns:52px 1fr 58px;column-gap:10px;align-items:center;padding:4px 0;font-family:var(--mono);font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
-  .day .d{color:var(--muted)} .day .n{text-align:right;color:var(--ink);font-weight:500;white-space:nowrap} .day .n em{font-style:normal;color:var(--ok);font-weight:400;margin-left:4px}
-  .day .bar{height:8px;border-radius:4px;background:var(--band);overflow:hidden;position:relative}
-  .day .bar i{position:absolute;left:0;top:0;bottom:0;width:100%;transform-origin:left center;background:var(--chinook);border-radius:4px;opacity:.85;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
-  .day .sp{grid-column:2/4;font-family:var(--ui);font-size:12px;color:var(--muted);margin-top:-2px;padding-bottom:2px}
-  .season{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-  .season .big{font-size:28px}
+  .day{display:grid;grid-template-columns:52px 1fr 96px;column-gap:10px;align-items:center;padding:5px 0;font-family:var(--mono);font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+  .day .d{color:var(--muted)}
+  .day .bar{height:9px;border-radius:5px;background:var(--band);overflow:hidden;position:relative}
+  .day .bar i{position:absolute;top:0;bottom:0;left:0;display:block}
+  .day .bar i.u{background:var(--ok);border-radius:5px 0 0 5px}
+  .day .bar i.dn{background:var(--down);opacity:.8}
+  .day .n{display:flex;justify-content:flex-end;gap:9px;white-space:nowrap}
+  .day .n span{display:inline-flex;align-items:center;gap:3px;font-weight:600}
+  .day .n .up{color:var(--ok)} .day .n .down{color:var(--down)}
+  .days-key{display:flex;gap:14px;flex-wrap:wrap;font-family:var(--ui);font-size:11.5px;color:var(--muted);margin-top:10px}
+  .days-key i{display:inline-block;width:14px;height:7px;border-radius:4px;vertical-align:middle;margin-right:5px}
+  .season{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .season .big{font-size:30px}
   .season .biglbl{margin-top:0}
   .readouts{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--line)}
   .ro{padding:16px 18px 14px;display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -138,25 +147,33 @@
 
   <h2>Live now</h2>
   <div class="grid">
-    <div class="card">
-      <div class="hd">Latest fish identified</div>
-      <div id="clipwrap"><video autoplay loop muted playsinline src="latest_model_id.mp4?t=1787682176"></video></div>
-      <div class="cap" id="clipcap">Boxes coloured by species, with the fish's movement path.</div>
+    <div class="col">
+      <div class="card">
+        <div class="hd">Latest fish identified</div>
+        <div id="clipwrap"><video autoplay loop muted playsinline src="latest_model_id.mp4?t=1787682176"></video></div>
+        <div class="cap" id="clipcap">Boxes coloured by species, with the fish's movement path.</div>
+      </div>
+      <div class="card">
+        <div class="hd">Season totals</div>
+        <div class="bd">
+          <div class="season">
+            <span class="big" id="total">0</span>
+            <span class="biglbl">fish identified this season</span>
+          </div>
+          <table style="margin-top:10px">
+            <thead><tr><th>Species</th><th class="n">Seen</th><th class="n">Net&nbsp;up</th></tr></thead>
+            <tbody id="tbody"></tbody>
+          </table>
+        </div>
+      </div>
     </div>
     <div class="card">
       <div class="hd">This season so far <span class="muted" style="font-weight:400;font-size:12px" id="dc-asof"></span></div>
       <div class="bd">
-        <div class="today"><span class="today-n" id="dc-today-n">0</span><span class="today-up" id="dc-today-up"></span><span class="today-when">today</span></div>
+        <div class="today"><span class="today-lbl">Today:</span><span class="today-n" id="dc-today-n">0</span><span class="today-up" id="dc-today-up"></span><span class="today-dn" id="dc-today-dn"></span></div>
         <div class="today-sp" id="dc-today-sp">quiet so far</div>
         <div class="days" id="dc-days"></div>
-        <div class="season">
-          <span class="big" id="total">54</span>
-          <span class="biglbl">fish identified this season</span>
-        </div>
-        <table style="margin-top:8px">
-          <thead><tr><th>Species</th><th class="n">Seen</th><th class="n">Net&nbsp;up</th></tr></thead>
-          <tbody id="tbody"><tr><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="n">50</td><td class="n">+39</td></tr></tbody>
-        </table>
+        <div class="days-key"><span><i style="background:var(--ok)"></i>fish moving upstream</span><span><i style="background:var(--down);opacity:.8"></i>downstream</span></div>
       </div>
     </div>
   </div>
@@ -269,6 +286,65 @@
   </div>
 
 
+<!-- ATL_CAND_START -->
+<section>
+  <h2>Atlantic candidates</h2>
+  <details class="atlc" style="margin-bottom:12px">
+    <summary><span id="atlrev-count">0</span> reviewer-confirmed Atlantic passages &mdash; the season log</summary>
+    <div class="atlrev-list" id="atlrev-list"></div>
+  </details>
+  <details class="atlc">
+    <summary><span id="atlc-count">0</span> flagged for review &mdash; tap to view</summary>
+    <div class="atlc-grid" id="atlc-grid"></div>
+  </details>
+</section>
+<style>
+  .atlc{border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
+  .atlc summary{cursor:pointer;padding:14px 18px;font-family:var(--sans,sans-serif);font-weight:600;color:var(--ink)}
+  .atlc summary:hover{background:var(--band)}
+  .atlc-note{font-family:var(--sans,sans-serif);font-size:13.5px;color:var(--muted);margin:0;padding:2px 18px 10px;max-width:72ch;line-height:1.55}
+  .atlc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;padding:6px 18px 18px}
+  .atlc-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg);margin:0}
+  .atlc-card img{width:100%;height:auto;display:block}
+  .atlc-cap{font-family:var(--mono,monospace);font-size:12px;color:var(--ink2);padding:8px 10px;line-height:1.55}
+  .atlrev-list{font-family:var(--mono,monospace);font-size:12.5px;color:var(--ink2);padding:4px 18px 16px;line-height:1.9}
+</style>
+<script>
+(function(){
+  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  var last="";
+  function tick(){
+    fetch("atl_candidates.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
+      var cs=(d&&d.cands)||[], g=document.getElementById("atlc-grid"), n=document.getElementById("atlc-count");
+      if(n)n.textContent=cs.length;
+      if(!g)return;
+      var sig=(d&&d.updated||"")+":"+cs.length;
+      if(sig===last)return;                        // unchanged; don't re-render (keeps images stable)
+      last=sig;
+      if(!cs.length){g.innerHTML='<p class="atlc-note">None yet &mdash; this fills in if the model sees a possible Atlantic.</p>';return;}
+      g.innerHTML=cs.map(function(c){
+        return '<figure class="atlc-card"><img loading="lazy" src="atl_cand/'+esc(c.img)+'" alt="Atlantic candidate frame">'+
+          '<figcaption class="atlc-cap">'+esc(c.date)+' &middot; '+esc(c.time)+'<br>peak P(Atlantic) '+Math.round((c.peak||0)*100)+'% on '+esc(c.frames)+' frames<br>'+(c.counted===false?'not auto-counted &middot; top ':'counted as ')+esc(c.counted_as)+' '+Math.round((c.conf||0)*100)+'%</figcaption></figure>';
+      }).join("");
+    }).catch(function(){});
+  }
+  function tick2(){
+    fetch("atl_confirmed.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
+      var ps=(d&&d.passages)||[], n=document.getElementById("atlrev-count"), L=document.getElementById("atlrev-list");
+      if(n){var ind={}; ps.forEach(function(p){if(p.fish)ind[p.fish]=1;});
+        var ni=Object.keys(ind).length;
+        n.textContent=ps.length+(ni?" ("+ni+" individual"+(ni>1?"s":"")+")":"");}
+      if(L)L.innerHTML=ps.map(function(p){
+        return '<div>'+esc(p.date)+' &middot; '+esc(p.time)+' &middot; '+esc(p.clip)+
+          (p.fish?' &middot; fish '+esc(p.fish):'')+' &middot; auto: '+esc(p.counted_as||"")+
+          (p.note?' &middot; '+esc(p.note):'')+'</div>';}).join("");
+    }).catch(function(){});
+  }
+  tick(); tick2(); setInterval(tick, 60000); setInterval(tick2, 300000);
+})();
+</script>
+<!-- ATL_CAND_END -->
+
   <footer>
     Model: a DETR object detector + a DINOv3 species classifier + BoT-SORT tracking, run on the live camera feed.
     Counts apply the validated confidence and track-length gates. Historical curves and the 2026 forecast come
@@ -306,6 +382,37 @@
     }).join("");
   }
   function lastVal(a){var v=null;(a||[]).forEach(function(x){if(x!=null)v=x;});return v;}
+  var ARR_UP='<svg class="arr" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 1.4 9.3 8.6H.7z"/></svg>';
+  var ARR_DN='<svg class="arr" viewBox="0 0 10 10" aria-hidden="true"><path d="M5 8.6.7 1.4h8.6z"/></svg>';
+  var SPN={0:"Chinook",1:"Coho",2:"Atlantic",3:"Rainbow",4:"Brown"};
+  function seen(dy){var a=0;for(var k=0;k<5;k++){var v=dy&&dy.sp&&dy.sp[k];if(v)a+=v[0];}return a;}
+  function brk(sp){var p=[];for(var k=0;k<5;k++){var v=sp&&sp[k];if(v&&v[0])p.push(v[0]+" "+SPN[k]);}return p.join(" · ");}
+  function dirOf(dy){
+    if(dy&&dy.dir)return dy.dir;                     // builder-supplied {up,down,stay}
+    var u=0,d=0,st=0;                                // else count the day's events
+    (cur.events||[]).forEach(function(e){ if(String(e.iso||"").slice(0,10)!==dy.date)return; if(e.direction==="up")u++; else if(e.direction==="down")d++; else st++; });
+    return {up:u,down:d,stay:st};
+  }
+  function renderDaily(){
+    var days=cur.daily||[], el;
+    var now=new Date(), tiso=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+    var today=null; days.forEach(function(dy){if(dy.date===tiso)today=dy;});
+    var tn=today?seen(today):0, td=today?dirOf(today):{up:0,down:0};
+    if((el=document.getElementById("dc-today-n")))el.textContent=tn;
+    if((el=document.getElementById("dc-today-up")))el.innerHTML=tn?ARR_UP+td.up+" up":"";
+    if((el=document.getElementById("dc-today-dn")))el.innerHTML=(tn&&td.down)?ARR_DN+td.down+" down":"";
+    if((el=document.getElementById("dc-today-sp")))el.textContent=tn?brk(today.sp):"quiet so far";
+    if((el=document.getElementById("dc-asof"))&&cur.updated){var u=new Date(cur.updated);el.textContent="as of "+u.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});}
+    var prev=days.filter(function(dy){return dy.date!==tiso;}).slice(0,7);
+    var mx=Math.max(1,td.up+td.down);
+    var rowsD=prev.map(function(dy){var d=dirOf(dy); mx=Math.max(mx,d.up+d.down); return [dy,d];});
+    if((el=document.getElementById("dc-days")))el.innerHTML=rowsD.map(function(r){
+      var dy=r[0], d=r[1], wu=100*d.up/mx, wd=100*d.down/mx;
+      return '<div class="day" title="'+esc(seen(dy)+' identified: '+brk(dy.sp))+'"><span class="d">'+esc(dy.label)+'</span>'+
+        '<span class="bar"><i class="u" style="width:'+wu.toFixed(1)+'%"></i><i class="dn" style="left:'+wu.toFixed(1)+'%;width:'+wd.toFixed(1)+'%"></i></span>'+
+        '<span class="n"><span class="up">'+ARR_UP+d.up+'</span><span class="down">'+ARR_DN+d.down+'</span></span></div>';
+    }).join("")||'<div class="day"><span class="d" style="grid-column:1/4">First day of counting.</span></div>';
+  }
   function shortDate(iso){ if(!iso)return ""; var d=new Date(iso+"T12:00:00"); return d.toLocaleDateString([], {month:"short", day:"numeric"}); }
 
   function draw(){
@@ -325,6 +432,7 @@
       } else { cw.innerHTML='<div class="ph">Waiting for the first identified fish - the model is watching the tunnel now.</div>'; } }
     if((el=document.getElementById("evbody")))el.innerHTML=evrows(cur.events);
     if((el=document.getElementById("evcount")))el.textContent=(cur.events||[]).length?("("+(cur.events||[]).length+")"):"";
+    renderDaily();
     // readouts: model (Chinook identified) vs Riverwatcher (raw up-count)
     var chin=(cur.totals||[]).filter(function(x){return x.sp===0;})[0];
     if((el=document.getElementById("ro-model")))el.textContent=chin?fmt(chin.activity):"0";
@@ -494,98 +602,9 @@
 })();
 </script>
 <!-- DAILY_COUNT_START -->
-<script>
-(function(){
-  // Daily counts live inside "This season so far": today (big), the last 7 days as bars,
-  // then the season totals. Data: model_live.json "daily" = per day {sp: [seen, net_up]}.
-  var SPN={0:"Chinook",1:"Coho",2:"Atlantic",3:"Rainbow",4:"Brown"};
-  var last="";
-  function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
-  function brk(sp){var p=[];for(var s=0;s<5;s++){var v=sp&&sp[s];if(v&&v[0])p.push(v[0]+" "+SPN[s]);}return p.join(" · ");}
-  function others(sp){var p=[];for(var s=1;s<5;s++){var v=sp&&sp[s];if(v&&v[0])p.push(v[0]+" "+SPN[s]);}return p.join(" · ");}
-  function tots(sp){var a=0,n=0;for(var s=0;s<5;s++){var v=sp&&sp[s];if(v){a+=v[0];n+=v[1];}}return [a,n];}
-  function tick(){
-    fetch("model_live.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
-      var days=(d&&d.daily)||[];
-      var sig=(d&&d.updated||"")+":"+days.length; if(sig===last)return; last=sig;
-      var now=new Date();
-      var tiso=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
-      var today=null; days.forEach(function(dy){if(dy.date===tiso)today=dy;});
-      var t=tots(today&&today.sp), el;
-      if((el=document.getElementById("dc-today-n")))el.textContent=t[0];
-      if((el=document.getElementById("dc-today-up")))el.textContent=t[0]?("▲"+t[1]+" up"):"";
-      if((el=document.getElementById("dc-today-sp")))el.textContent=t[0]?brk(today.sp):"quiet so far";
-      if((el=document.getElementById("dc-asof"))&&d.updated){var u=new Date(d.updated);el.textContent="as of "+u.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});}
-      var prev=days.filter(function(dy){return dy.date!==tiso;}).slice(0,7);
-      var mx=Math.max(1,t[0]); prev.forEach(function(dy){mx=Math.max(mx,tots(dy.sp)[0]);});
-      if((el=document.getElementById("dc-days")))el.innerHTML=prev.map(function(dy){
-        var v=tots(dy.sp), w=Math.round(100*v[0]/mx), o=others(dy.sp);
-        return '<div class="day" title="'+esc(brk(dy.sp))+'"><span class="d">'+esc(dy.label)+'</span><span class="bar"><i style="transform:scaleX('+(w/100)+')"></i></span><span class="n">'+v[0]+(v[0]?'<em>▲'+v[1]+'</em>':'')+'</span>'+(o?'<span class="sp">incl. '+esc(o)+'</span>':'')+'</div>';
-      }).join("")||'<div class="day"><span class="d muted" style="grid-column:1/4">First day of counting.</span></div>';
-    }).catch(function(){});
-  }
-  tick(); setInterval(tick, 60000);
-})();
-</script>
+<!-- daily counts render inside the main script ("This season so far") -->
 <!-- DAILY_COUNT_END -->
-<!-- ATL_CAND_START -->
-<section>
-  <h2>Atlantic candidates</h2>
-  <details class="atlc" style="margin-bottom:12px">
-    <summary><span id="atlrev-count">0</span> reviewer-confirmed Atlantic passages &mdash; the season log</summary>
-    <div class="atlrev-list" id="atlrev-list"></div>
-  </details>
-  <details class="atlc">
-    <summary><span id="atlc-count">0</span> flagged for review &mdash; tap to view</summary>
-    <div class="atlc-grid" id="atlc-grid"></div>
-  </details>
-</section>
-<style>
-  .atlc{border:1px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
-  .atlc summary{cursor:pointer;padding:14px 18px;font-family:var(--sans,sans-serif);font-weight:600;color:var(--ink)}
-  .atlc summary:hover{background:var(--band)}
-  .atlc-note{font-family:var(--sans,sans-serif);font-size:13.5px;color:var(--muted);margin:0;padding:2px 18px 10px;max-width:72ch;line-height:1.55}
-  .atlc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;padding:6px 18px 18px}
-  .atlc-card{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--bg);margin:0}
-  .atlc-card img{width:100%;height:auto;display:block}
-  .atlc-cap{font-family:var(--mono,monospace);font-size:12px;color:var(--ink2);padding:8px 10px;line-height:1.55}
-  .atlrev-list{font-family:var(--mono,monospace);font-size:12.5px;color:var(--ink2);padding:4px 18px 16px;line-height:1.9}
-</style>
-<script>
-(function(){
-  function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
-  var last="";
-  function tick(){
-    fetch("atl_candidates.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
-      var cs=(d&&d.cands)||[], g=document.getElementById("atlc-grid"), n=document.getElementById("atlc-count");
-      if(n)n.textContent=cs.length;
-      if(!g)return;
-      var sig=(d&&d.updated||"")+":"+cs.length;
-      if(sig===last)return;                        // unchanged; don't re-render (keeps images stable)
-      last=sig;
-      if(!cs.length){g.innerHTML='<p class="atlc-note">None yet &mdash; this fills in if the model sees a possible Atlantic.</p>';return;}
-      g.innerHTML=cs.map(function(c){
-        return '<figure class="atlc-card"><img loading="lazy" src="atl_cand/'+esc(c.img)+'" alt="Atlantic candidate frame">'+
-          '<figcaption class="atlc-cap">'+esc(c.date)+' &middot; '+esc(c.time)+'<br>peak P(Atlantic) '+Math.round((c.peak||0)*100)+'% on '+esc(c.frames)+' frames<br>'+(c.counted===false?'not auto-counted &middot; top ':'counted as ')+esc(c.counted_as)+' '+Math.round((c.conf||0)*100)+'%</figcaption></figure>';
-      }).join("");
-    }).catch(function(){});
-  }
-  function tick2(){
-    fetch("atl_confirmed.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
-      var ps=(d&&d.passages)||[], n=document.getElementById("atlrev-count"), L=document.getElementById("atlrev-list");
-      if(n){var ind={}; ps.forEach(function(p){if(p.fish)ind[p.fish]=1;});
-        var ni=Object.keys(ind).length;
-        n.textContent=ps.length+(ni?" ("+ni+" individual"+(ni>1?"s":"")+")":"");}
-      if(L)L.innerHTML=ps.map(function(p){
-        return '<div>'+esc(p.date)+' &middot; '+esc(p.time)+' &middot; '+esc(p.clip)+
-          (p.fish?' &middot; fish '+esc(p.fish):'')+' &middot; auto: '+esc(p.counted_as||"")+
-          (p.note?' &middot; '+esc(p.note):'')+'</div>';}).join("");
-    }).catch(function(){});
-  }
-  tick(); tick2(); setInterval(tick, 60000); setInterval(tick2, 300000);
-})();
-</script>
-<!-- ATL_CAND_END -->
+
 
 </body>
 </html>
