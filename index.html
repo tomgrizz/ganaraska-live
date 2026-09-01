@@ -42,13 +42,13 @@
   .today{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
   .today-n{font-family:var(--mono);font-weight:600;font-size:44px;line-height:1;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
   .today-up{font-family:var(--mono);font-size:15px;color:var(--ok);font-weight:600;white-space:nowrap}
-  .today-l{font-family:var(--ui);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
+  .today-when{font-family:var(--ui);font-size:13.5px;color:var(--muted)}
   .today-sp{font-family:var(--ui);font-size:13.5px;color:var(--ink2);margin-top:3px;min-height:1.4em}
   .days{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
   .day{display:grid;grid-template-columns:52px 1fr 58px;column-gap:10px;align-items:center;padding:4px 0;font-family:var(--mono);font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
   .day .d{color:var(--muted)} .day .n{text-align:right;color:var(--ink);font-weight:500;white-space:nowrap} .day .n em{font-style:normal;color:var(--ok);font-weight:400;margin-left:4px}
   .day .bar{height:8px;border-radius:4px;background:var(--band);overflow:hidden;position:relative}
-  .day .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--chinook);border-radius:4px;opacity:.85;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .day .bar i{position:absolute;left:0;top:0;bottom:0;width:100%;transform-origin:left center;background:var(--chinook);border-radius:4px;opacity:.85;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
   .day .sp{grid-column:2/4;font-family:var(--ui);font-size:12px;color:var(--muted);margin-top:-2px;padding-bottom:2px}
   .season{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
   .season .big{font-size:28px}
@@ -146,13 +146,12 @@
     <div class="card">
       <div class="hd">This season so far <span class="muted" style="font-weight:400;font-size:12px" id="dc-asof"></span></div>
       <div class="bd">
-        <div class="today-l">Today</div>
-        <div class="today"><span class="today-n" id="dc-today-n">0</span><span class="today-up" id="dc-today-up"></span></div>
-        <div class="today-sp" id="dc-today-sp">quiet so far today</div>
+        <div class="today"><span class="today-n" id="dc-today-n">0</span><span class="today-up" id="dc-today-up"></span><span class="today-when">today</span></div>
+        <div class="today-sp" id="dc-today-sp">quiet so far</div>
         <div class="days" id="dc-days"></div>
         <div class="season">
           <span class="big" id="total">54</span>
-          <span class="biglbl">fish identified since Aug 24</span>
+          <span class="biglbl">fish identified this season</span>
         </div>
         <table style="margin-top:8px">
           <thead><tr><th>Species</th><th class="n">Seen</th><th class="n">Net&nbsp;up</th></tr></thead>
@@ -167,12 +166,12 @@
     <div class="readouts">
       <div class="ro model">
         <span class="ro-n" id="ro-model">&mdash;</span>
-        <span class="ro-l">Model &mdash; Chinook identified</span>
-        <span class="ro-s" id="ro-model-s">live, this page</span>
+        <span class="ro-l">Chinook identified by the model</span>
+        <span class="ro-s" id="ro-model-s">live, from the clips on this page</span>
       </div>
       <div class="ro rw">
         <span class="ro-n" id="ro-rw">&mdash;</span>
-        <span class="ro-l">Riverwatcher counter &mdash; fish up</span>
+        <span class="ro-l">Fish up, Riverwatcher counter</span>
         <span class="ro-s" id="ro-rw-s">raw scanner count, all species, since Aug 1 &middot; <a href="https://www.riverwatcherdaily.is/?I=133" target="_blank" rel="noopener">riverwatcherdaily.is</a></span>
       </div>
     </div>
@@ -333,7 +332,7 @@
       var today=null, now=new Date(), tiso=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
       (cur.daily||[]).forEach(function(dy){if(dy.date===tiso)today=dy;});
       var tc=today&&today.sp&&today.sp["0"]?today.sp["0"][0]:0;
-      el.textContent="today "+fmt(tc)+" · net up "+fmt(chin?chin.net_up:0)+" this season · live, this page";
+      el.textContent="today "+fmt(tc)+" · net up "+fmt(chin?chin.net_up:0)+" this season · live, from the clips on this page";
     }
     if(rw&&rw.season){
       if((el=document.getElementById("ro-rw")))el.textContent=fmt(rw.season.up);
@@ -503,6 +502,7 @@
   var last="";
   function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
   function brk(sp){var p=[];for(var s=0;s<5;s++){var v=sp&&sp[s];if(v&&v[0])p.push(v[0]+" "+SPN[s]);}return p.join(" · ");}
+  function others(sp){var p=[];for(var s=1;s<5;s++){var v=sp&&sp[s];if(v&&v[0])p.push(v[0]+" "+SPN[s]);}return p.join(" · ");}
   function tots(sp){var a=0,n=0;for(var s=0;s<5;s++){var v=sp&&sp[s];if(v){a+=v[0];n+=v[1];}}return [a,n];}
   function tick(){
     fetch("model_live.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
@@ -514,13 +514,13 @@
       var t=tots(today&&today.sp), el;
       if((el=document.getElementById("dc-today-n")))el.textContent=t[0];
       if((el=document.getElementById("dc-today-up")))el.textContent=t[0]?("▲"+t[1]+" up"):"";
-      if((el=document.getElementById("dc-today-sp")))el.textContent=t[0]?brk(today.sp):"quiet so far today";
-      if((el=document.getElementById("dc-asof"))&&d.updated){var u=new Date(d.updated);el.textContent="to "+u.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});}
+      if((el=document.getElementById("dc-today-sp")))el.textContent=t[0]?brk(today.sp):"quiet so far";
+      if((el=document.getElementById("dc-asof"))&&d.updated){var u=new Date(d.updated);el.textContent="as of "+u.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});}
       var prev=days.filter(function(dy){return dy.date!==tiso;}).slice(0,7);
       var mx=Math.max(1,t[0]); prev.forEach(function(dy){mx=Math.max(mx,tots(dy.sp)[0]);});
       if((el=document.getElementById("dc-days")))el.innerHTML=prev.map(function(dy){
-        var v=tots(dy.sp), w=Math.round(100*v[0]/mx);
-        return '<div class="day" title="'+esc(brk(dy.sp))+'"><span class="d">'+esc(dy.label)+'</span><span class="bar"><i style="width:'+w+'%"></i></span><span class="n">'+v[0]+(v[0]?'<em>▲'+v[1]+'</em>':'')+'</span></div>';
+        var v=tots(dy.sp), w=Math.round(100*v[0]/mx), o=others(dy.sp);
+        return '<div class="day" title="'+esc(brk(dy.sp))+'"><span class="d">'+esc(dy.label)+'</span><span class="bar"><i style="transform:scaleX('+(w/100)+')"></i></span><span class="n">'+v[0]+(v[0]?'<em>▲'+v[1]+'</em>':'')+'</span>'+(o?'<span class="sp">incl. '+esc(o)+'</span>':'')+'</div>';
       }).join("")||'<div class="day"><span class="d muted" style="grid-column:1/4">First day of counting.</span></div>';
     }).catch(function(){});
   }

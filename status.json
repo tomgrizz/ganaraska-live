@@ -1,0 +1,23 @@
+{
+ "ts": "2026-09-01T12:21:56-04:00",
+ "epoch": 1788279716,
+ "site": "Ganaraska",
+ "level": "ok",
+ "msg": "Live",
+ "feed": {
+  "ok": true,
+  "age_s": 5.7,
+  "last_frame": "2026-09-01T12:21:50-04:00",
+  "last_frame_epoch": 1788279710.361
+ },
+ "cutter": {
+  "lag_s": 4.8
+ },
+ "procs": {
+  "spool": true,
+  "cutter": true
+ },
+ "clips_today": 41,
+ "last_cycle_ok": true,
+ "last_publish": "2026-09-01T12:18:54-04:00"
+}
