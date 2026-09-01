@@ -1,23 +1,23 @@
 {
- "ts": "2026-09-01T12:21:56-04:00",
- "epoch": 1788279716,
+ "ts": "2026-09-01T12:50:46-04:00",
+ "epoch": 1788281446,
  "site": "Ganaraska",
  "level": "ok",
  "msg": "Live",
  "feed": {
   "ok": true,
-  "age_s": 5.7,
-  "last_frame": "2026-09-01T12:21:50-04:00",
-  "last_frame_epoch": 1788279710.361
+  "age_s": 10.1,
+  "last_frame": "2026-09-01T12:50:36-04:00",
+  "last_frame_epoch": 1788281436.22
  },
  "cutter": {
-  "lag_s": 4.8
+  "lag_s": 6.4
  },
  "procs": {
   "spool": true,
   "cutter": true
  },
- "clips_today": 41,
+ "clips_today": 70,
  "last_cycle_ok": true,
- "last_publish": "2026-09-01T12:18:54-04:00"
+ "last_publish": "2026-09-01T12:46:55-04:00"
 }
