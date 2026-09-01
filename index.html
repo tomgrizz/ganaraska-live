@@ -28,11 +28,41 @@
   html{caret-color:var(--accent)}
   .wrap{max-width:1040px;margin:0 auto;padding:22px 20px 72px}
   header{display:flex;align-items:center;gap:13px;flex-wrap:wrap;padding:6px 0 16px;border-bottom:1px solid var(--line)}
-  .live{display:inline-block;width:9px;height:9px;border-radius:50%;background:#e5484d;box-shadow:0 0 0 0 rgba(229,72,77,.5);animation:pulse 2.2s infinite}
-  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(229,72,77,.5)}70%{box-shadow:0 0 0 8px rgba(229,72,77,0)}100%{box-shadow:0 0 0 0 rgba(229,72,77,0)}}
-  @media (prefers-reduced-motion:reduce){.live{animation:none}}
-  .tag{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.11em;margin-right:auto}
+  :root{--ok:#1f9d55;--warn:#c98a12;--down:#d93f3a}
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ok:#3ec97a;--warn:#e0a63a;--down:#f06a63}}
+  .status{display:inline-flex;align-items:center;gap:9px;font-family:var(--ui);font-weight:600;font-size:13px;color:var(--ink2);padding:5px 12px 5px 9px;border:1px solid var(--line);border-radius:999px;background:var(--card);margin-right:auto;transition:border-color .4s}
+  .sdot{width:10px;height:10px;border-radius:50%;background:var(--muted);flex:none;transition:background .4s}
+  .status.ok .sdot{background:var(--ok);box-shadow:0 0 0 0 rgba(31,157,85,.45);animation:pulse 2.4s infinite}
+  .status.ok{border-color:rgba(31,157,85,.35)}
+  .status.warn .sdot{background:var(--warn)} .status.warn{border-color:rgba(201,138,18,.45)}
+  .status.down .sdot{background:var(--down)} .status.down{border-color:rgba(217,63,58,.45);color:var(--down)}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(31,157,85,.45)}70%{box-shadow:0 0 0 8px rgba(31,157,85,0)}100%{box-shadow:0 0 0 0 rgba(31,157,85,0)}}
+  @media (prefers-reduced-motion:reduce){.status.ok .sdot{animation:none}}
   .updated{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+  .today{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+  .today-n{font-family:var(--mono);font-weight:600;font-size:44px;line-height:1;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .today-up{font-family:var(--mono);font-size:15px;color:var(--ok);font-weight:600;white-space:nowrap}
+  .today-l{font-family:var(--ui);font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:6px}
+  .today-sp{font-family:var(--ui);font-size:13.5px;color:var(--ink2);margin-top:3px;min-height:1.4em}
+  .days{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
+  .day{display:grid;grid-template-columns:52px 1fr 58px;column-gap:10px;align-items:center;padding:4px 0;font-family:var(--mono);font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+  .day .d{color:var(--muted)} .day .n{text-align:right;color:var(--ink);font-weight:500;white-space:nowrap} .day .n em{font-style:normal;color:var(--ok);font-weight:400;margin-left:4px}
+  .day .bar{height:8px;border-radius:4px;background:var(--band);overflow:hidden;position:relative}
+  .day .bar i{position:absolute;left:0;top:0;bottom:0;background:var(--chinook);border-radius:4px;opacity:.85;transition:width .6s cubic-bezier(.2,.8,.2,1)}
+  .day .sp{grid-column:2/4;font-family:var(--ui);font-size:12px;color:var(--muted);margin-top:-2px;padding-bottom:2px}
+  .season{margin-top:14px;border-top:1px solid var(--line);padding-top:12px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .season .big{font-size:28px}
+  .season .biglbl{margin-top:0}
+  .readouts{display:grid;grid-template-columns:1fr 1fr;gap:0;border-bottom:1px solid var(--line)}
+  .ro{padding:16px 18px 14px;display:flex;flex-direction:column;gap:3px;min-width:0}
+  .ro+.ro{border-left:1px solid var(--line)}
+  .ro-n{font-family:var(--mono);font-weight:600;font-size:34px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+  .ro.model .ro-n{color:var(--chinook)} .ro.rw .ro-n{color:var(--accent2)}
+  .ro-l{font-family:var(--sans);font-weight:700;font-size:13.5px;color:var(--ink);margin-top:4px}
+  .ro-s{font-family:var(--ui);font-size:12.5px;color:var(--muted);line-height:1.45}
+  .ro-s a{color:inherit}
+  @media (max-width:560px){.readouts{grid-template-columns:1fr}.ro+.ro{border-left:0;border-top:1px solid var(--line)}}
+  .rec{display:inline-block;font-family:var(--ui);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--accent2);border:1px solid currentColor;border-radius:999px;padding:1px 6px;margin-left:6px;vertical-align:middle;opacity:.85}
   h1{font-family:var(--sans);font-weight:800;font-size:clamp(23px,4.4vw,34px);margin:14px 0 0;letter-spacing:-.02em}
   .lede{color:var(--ink2);margin:7px 0 0;max-width:64ch}
   h2{font-family:var(--sans);font-weight:700;font-size:18px;margin:34px 0 0}
@@ -99,8 +129,8 @@
 <body>
 <div class="wrap">
   <header>
-    <span class="live"></span>
-    <span class="updated" id="updated">Updated: 2026-08-25 14:22</span>
+    <span class="status" id="status" role="status" aria-live="polite"><span class="sdot" id="sdot"></span><span id="stext">Connecting&hellip;</span></span>
+    <span class="updated" id="updated"></span>
   </header>
   <h1>Ganaraska River: Live Model Outputs <span class="exp">Experimental</span></h1>
   <p class="lede">A computer vision model watches the counter tunnel camera in real time, identifies each salmon or
@@ -114,24 +144,43 @@
       <div class="cap" id="clipcap">Boxes coloured by species, with the fish's movement path.</div>
     </div>
     <div class="card">
-      <div class="hd">This season so far</div>
+      <div class="hd">This season so far <span class="muted" style="font-weight:400;font-size:12px" id="dc-asof"></span></div>
       <div class="bd">
-        <div class="big" id="total">54</div>
-        <div class="biglbl">fish identified</div>
-        <table style="margin-top:14px">
+        <div class="today-l">Today</div>
+        <div class="today"><span class="today-n" id="dc-today-n">0</span><span class="today-up" id="dc-today-up"></span></div>
+        <div class="today-sp" id="dc-today-sp">quiet so far today</div>
+        <div class="days" id="dc-days"></div>
+        <div class="season">
+          <span class="big" id="total">54</span>
+          <span class="biglbl">fish identified since Aug 24</span>
+        </div>
+        <table style="margin-top:8px">
           <thead><tr><th>Species</th><th class="n">Seen</th><th class="n">Net&nbsp;up</th></tr></thead>
-          <tbody id="tbody"><tr><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="n">50</td><td class="n">+39</td></tr><tr><td><span class="dot" style="background:#B8901E"></span>Brown</td><td class="n">4</td><td class="n">+2</td></tr></tbody>
+          <tbody id="tbody"><tr><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="n">50</td><td class="n">+39</td></tr></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <h2>Current Count:</h2>
+  <h2>Current count</h2>
   <div class="card chartcard">
-    <div class="hd">Cumulative Chinook past the counter <span class="muted" id="chartsub"></span></div>
+    <div class="readouts">
+      <div class="ro model">
+        <span class="ro-n" id="ro-model">&mdash;</span>
+        <span class="ro-l">Model &mdash; Chinook identified</span>
+        <span class="ro-s" id="ro-model-s">live, this page</span>
+      </div>
+      <div class="ro rw">
+        <span class="ro-n" id="ro-rw">&mdash;</span>
+        <span class="ro-l">Riverwatcher counter &mdash; fish up</span>
+        <span class="ro-s" id="ro-rw-s">raw scanner count, all species, since Aug 1 &middot; <a href="https://www.riverwatcherdaily.is/?I=133" target="_blank" rel="noopener">riverwatcherdaily.is</a></span>
+      </div>
+    </div>
+    <div class="hd">Cumulative past the counter <span class="muted" id="chartsub"></span></div>
     <div class="bd" style="padding:14px 14px 4px"><canvas id="runchart" width="1000" height="440"></canvas></div>
     <div class="legend">
-      <span><span class="sw" style="background:var(--chinook)"></span> 2026 (model, live)</span>
+      <span><span class="sw" style="background:var(--chinook)"></span> 2026 model (Chinook)</span>
+      <span><span class="sw" style="background:var(--accent2)"></span> 2026 Riverwatcher counter (raw, all species)</span>
       <span><span class="swb"></span> 2020&ndash;2025 range</span>
       <span><span class="sw" style="background:var(--muted)"></span> past-years median</span>
       <span><span class="sw" style="background:var(--accent);opacity:.6"></span> 2026 forecast &plusmn;21%</span>
@@ -143,7 +192,7 @@
     <div class="hd">Newest first <span class="muted" id="evcount"></span></div>
     <div class="evwrap">
       <table>
-        <thead><tr><th>When</th><th>Species</th><th>Direction</th><th>Clip (on G:)</th><th class="n">Conf.</th></tr></thead>
+        <thead><tr><th>When</th><th>Species</th><th>Direction</th><th>Clip</th><th class="n">Conf.</th></tr></thead>
         <tbody id="evbody"><tr><td class="muted">Aug 25 2:18 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\14-18-28.mp4">14-18-28.mp4</td><td class="n">92%</td></tr><tr><td class="muted">Aug 25 2:18 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\14-18-28.mp4">14-18-28.mp4</td><td class="n">86%</td></tr><tr><td class="muted">Aug 25 2:17 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\14-17-40.mp4">14-17-40.mp4</td><td class="n">91%</td></tr><tr><td class="muted">Aug 25 2:02 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\14-02-24.mp4">14-02-24.mp4</td><td class="n">96%</td></tr><tr><td class="muted">Aug 25 1:06 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\13-06-21.mp4">13-06-21.mp4</td><td class="n">93%</td></tr><tr><td class="muted">Aug 25 12:59 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\12-59-20.mp4">12-59-20.mp4</td><td class="n">94%</td></tr><tr><td class="muted">Aug 25 12:51 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\12-51-10.mp4">12-51-10.mp4</td><td class="n">98%</td></tr><tr><td class="muted">Aug 25 11:40 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\11-40-56.mp4">11-40-56.mp4</td><td class="n">98%</td></tr><tr><td class="muted">Aug 25 11:40 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\11-40-34.mp4">11-40-34.mp4</td><td class="n">97%</td></tr><tr><td class="muted">Aug 25 11:39 AM</td><td><span class="dot" style="background:#B8901E"></span>Brown</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\11-39-26.mp4">11-39-26.mp4</td><td class="n">66%</td></tr><tr><td class="muted">Aug 25 11:39 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\11-39-26.mp4">11-39-26.mp4</td><td class="n">89%</td></tr><tr><td class="muted">Aug 25 11:36 AM</td><td><span class="dot" style="background:#B8901E"></span>Brown</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\11-36-08.mp4">11-36-08.mp4</td><td class="n">100%</td></tr><tr><td class="muted">Aug 25 11:28 AM</td><td><span class="dot" style="background:#B8901E"></span>Brown</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\11-28-53.mp4">11-28-53.mp4</td><td class="n">85%</td></tr><tr><td class="muted">Aug 25 11:16 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\11-16-24.mp4">11-16-24.mp4</td><td class="n">99%</td></tr><tr><td class="muted">Aug 25 11:01 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\11-01-11.mp4">11-01-11.mp4</td><td class="n">69%</td></tr><tr><td class="muted">Aug 25 10:57 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-57-47.mp4">10-57-47.mp4</td><td class="n">99%</td></tr><tr><td class="muted">Aug 25 10:55 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-55-50.mp4">10-55-50.mp4</td><td class="n">94%</td></tr><tr><td class="muted">Aug 25 10:54 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-54-56.mp4">10-54-56.mp4</td><td class="n">97%</td></tr><tr><td class="muted">Aug 25 10:54 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-54-09.mp4">10-54-09.mp4</td><td class="n">100%</td></tr><tr><td class="muted">Aug 25 10:53 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-53-25.mp4">10-53-25.mp4</td><td class="n">92%</td></tr><tr><td class="muted">Aug 25 10:52 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-52-12.mp4">10-52-12.mp4</td><td class="n">75%</td></tr><tr><td class="muted">Aug 25 10:47 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-47-39.mp4">10-47-39.mp4</td><td class="n">94%</td></tr><tr><td class="muted">Aug 25 10:43 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-43-41.mp4">10-43-41.mp4</td><td class="n">76%</td></tr><tr><td class="muted">Aug 25 10:39 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-39-26.mp4">10-39-26.mp4</td><td class="n">99%</td></tr><tr><td class="muted">Aug 25 10:33 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-33-28.mp4">10-33-28.mp4</td><td class="n">91%</td></tr><tr><td class="muted">Aug 25 10:27 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-27-54.mp4">10-27-54.mp4</td><td class="n">78%</td></tr><tr><td class="muted">Aug 25 10:26 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-26-05.mp4">10-26-05.mp4</td><td class="n">92%</td></tr><tr><td class="muted">Aug 25 10:21 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-21-35.mp4">10-21-35.mp4</td><td class="n">70%</td></tr><tr><td class="muted">Aug 25 10:15 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-15-50.mp4">10-15-50.mp4</td><td class="n">96%</td></tr><tr><td class="muted">Aug 25 10:15 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-15-35.mp4">10-15-35.mp4</td><td class="n">82%</td></tr><tr><td class="muted">Aug 25 10:01 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\10-01-39.mp4">10-01-39.mp4</td><td class="n">88%</td></tr><tr><td class="muted">Aug 25 9:58 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-58-44.mp4">09-58-44.mp4</td><td class="n">99%</td></tr><tr><td class="muted">Aug 25 9:56 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-56-21.mp4">09-56-21.mp4</td><td class="n">95%</td></tr><tr><td class="muted">Aug 25 9:52 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-52-08.mp4">09-52-08.mp4</td><td class="n">94%</td></tr><tr><td class="muted">Aug 25 9:51 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-51-50.mp4">09-51-50.mp4</td><td class="n">95%</td></tr><tr><td class="muted">Aug 25 9:49 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-49-52.mp4">09-49-52.mp4</td><td class="n">98%</td></tr><tr><td class="muted">Aug 25 9:49 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-49-52.mp4">09-49-52.mp4</td><td class="n">97%</td></tr><tr><td class="muted">Aug 25 9:46 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-46-39.mp4">09-46-39.mp4</td><td class="n">95%</td></tr><tr><td class="muted">Aug 25 9:45 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-45-28.mp4">09-45-28.mp4</td><td class="n">72%</td></tr><tr><td class="muted">Aug 25 9:42 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-42-12.mp4">09-42-12.mp4</td><td class="n">92%</td></tr><tr><td class="muted">Aug 25 9:36 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-36-13.mp4">09-36-13.mp4</td><td class="n">91%</td></tr><tr><td class="muted">Aug 25 9:36 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-36-13.mp4">09-36-13.mp4</td><td class="n">100%</td></tr><tr><td class="muted">Aug 25 9:36 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-36-13.mp4">09-36-13.mp4</td><td class="n">81%</td></tr><tr><td class="muted">Aug 25 9:34 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-34-27.mp4">09-34-27.mp4</td><td class="n">82%</td></tr><tr><td class="muted">Aug 25 9:34 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-34-27.mp4">09-34-27.mp4</td><td class="n">96%</td></tr><tr><td class="muted">Aug 25 9:34 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-34-27.mp4">09-34-27.mp4</td><td class="n">70%</td></tr><tr><td class="muted">Aug 25 9:34 AM</td><td><span class="dot" style="background:#B8901E"></span>Brown</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-34-15.mp4">09-34-15.mp4</td><td class="n">81%</td></tr><tr><td class="muted">Aug 25 9:26 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-26-33.mp4">09-26-33.mp4</td><td class="n">84%</td></tr><tr><td class="muted">Aug 25 9:10 AM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-25\09-10-25.mp4">09-10-25.mp4</td><td class="n">86%</td></tr><tr><td class="muted">Aug 24 4:11 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-24\16-11-18.mp4">16-11-18.mp4</td><td class="n">98%</td></tr><tr><td class="muted">Aug 24 4:09 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-24\16-09-35.mp4">16-09-35.mp4</td><td class="n">95%</td></tr><tr><td class="muted">Aug 24 4:04 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="stay arrow">— stay</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-24\16-04-20.mp4">16-04-20.mp4</td><td class="n">90%</td></tr><tr><td class="muted">Aug 24 4:03 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-24\16-03-46.mp4">16-03-46.mp4</td><td class="n">92%</td></tr><tr><td class="muted">Aug 24 3:53 PM</td><td><span class="dot" style="background:#E68200"></span>Chinook</td><td class="up arrow">↑ up</td><td class="clip" title="G:\Counters-2026-model-clips\Ganaraska\2026-08-24\15-53-48.mp4">15-53-48.mp4</td><td class="n">98%</td></tr></tbody>
       </table>
     </div>
@@ -224,7 +273,9 @@
   <footer>
     Model: a DETR object detector + a DINOv3 species classifier + BoT-SORT tracking, run on the live camera feed.
     Counts apply the validated confidence and track-length gates. Historical curves and the 2026 forecast come
-    from the Lake Ontario run-pool analysis. Updates every few minutes.
+    from the Lake Ontario run-pool analysis. The Riverwatcher line is the counter's own raw daily up-count from
+    riverwatcherdaily.is (every species, not technician-validated), shown for comparison only. Clips tagged
+    &ldquo;recovered&rdquo; were pulled from the counter PC's iSpy recordings after a link outage. Updates every few minutes.
   </footer>
 </div>
 
@@ -236,29 +287,36 @@
   var DOY0=227, DOY1=319;
   var hist=JSON.parse(document.getElementById("hist").textContent||"{}");
   var boot=JSON.parse(document.getElementById("boot").textContent||"{}");
-  var cur=boot;
+  var cur=boot, rw=null;
 
   function fmt(n){return (n||0).toLocaleString();}
+  function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
   function rows(t){
     if(!t||!t.length)return '<tr><td colspan="3" class="muted">No fish identified yet - the tunnel is quiet.</td></tr>';
-    return t.map(function(x){return '<tr><td><span class="dot" style="background:'+(x.hex||HEX[x.sp]||"#888")+'"></span>'+x.name+
+    return t.map(function(x){return '<tr><td><span class="dot" style="background:'+(x.hex||HEX[x.sp]||"#888")+'"></span>'+esc(x.name)+
       '</td><td class="n">'+fmt(x.activity)+'</td><td class="n">'+(x.net_up>=0?"+":"")+fmt(x.net_up)+'</td></tr>';}).join("");
   }
   function evrows(ev){
     if(!ev||!ev.length)return '<tr><td colspan="5" class="muted">No events yet - they appear here as fish pass.</td></tr>';
     return ev.slice(0,300).map(function(e){
-      var d=e.direction, cl=d==="up"?"up":(d==="down"?"down":"stay"), ar=d==="up"?"\u2191 up":(d==="down"?"\u2193 down":"\u2014 stay");
-      return '<tr><td class="muted">'+e.date+' '+e.time+'</td><td><span class="dot" style="background:'+(e.hex||HEX[e.sp]||"#888")+'"></span>'+e.species+
-        '</td><td class="'+cl+' arrow">'+ar+'</td><td class="clip" title="'+(e.path||'')+'">'+(e.clip||'')+'</td><td class="n">'+Math.round((e.conf||0)*100)+'%</td></tr>';
+      var d=e.direction, cl=d==="up"?"up":(d==="down"?"down":"stay"), ar=d==="up"?"↑ up":(d==="down"?"↓ down":"— stay");
+      var clip=String(e.clip||""), rec=/_ispy\.mp4$/i.test(clip);
+      var clipHtml=esc(clip.replace(/_ispy\.mp4$/i,".mp4"))+(rec?'<span class="rec" title="Recovered from the counter PC’s own iSpy recording after a link outage">recovered</span>':'');
+      return '<tr><td class="muted">'+esc(e.date)+' '+esc(e.time)+'</td><td><span class="dot" style="background:'+(e.hex||HEX[e.sp]||"#888")+'"></span>'+esc(e.species)+
+        '</td><td class="'+cl+' arrow">'+ar+'</td><td class="clip">'+clipHtml+'</td><td class="n">'+Math.round((e.conf||0)*100)+'%</td></tr>';
     }).join("");
   }
+  function lastVal(a){var v=null;(a||[]).forEach(function(x){if(x!=null)v=x;});return v;}
+  function shortDate(iso){ if(!iso)return ""; var d=new Date(iso+"T12:00:00"); return d.toLocaleDateString([], {month:"short", day:"numeric"}); }
 
   function draw(){
     var el;
     var tot=(cur.totals||[]).reduce(function(a,x){return a+(x.activity||0);},0);
     if((el=document.getElementById("tbody")))el.innerHTML=rows(cur.totals);
     if((el=document.getElementById("total")))el.textContent=fmt(tot);
-    if((el=document.getElementById("updated"))&&cur.updated)el.textContent="Updated: "+new Date(cur.updated).toLocaleString();
+    window.GL_UPDATED=cur.updated||null;
+    if(!window.GL_STATUS_OK&&(el=document.getElementById("updated"))&&cur.updated){
+      var d=new Date(cur.updated); el.textContent="Updated "+d.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"}); }
     var t=Date.now();
     var cw=document.getElementById("clipwrap");
     if(cw){ if(cur.latest_clip){ var v=cw.querySelector("video");
@@ -268,6 +326,23 @@
       } else { cw.innerHTML='<div class="ph">Waiting for the first identified fish - the model is watching the tunnel now.</div>'; } }
     if((el=document.getElementById("evbody")))el.innerHTML=evrows(cur.events);
     if((el=document.getElementById("evcount")))el.textContent=(cur.events||[]).length?("("+(cur.events||[]).length+")"):"";
+    // readouts: model (Chinook identified) vs Riverwatcher (raw up-count)
+    var chin=(cur.totals||[]).filter(function(x){return x.sp===0;})[0];
+    if((el=document.getElementById("ro-model")))el.textContent=chin?fmt(chin.activity):"0";
+    if((el=document.getElementById("ro-model-s"))){
+      var today=null, now=new Date(), tiso=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+      (cur.daily||[]).forEach(function(dy){if(dy.date===tiso)today=dy;});
+      var tc=today&&today.sp&&today.sp["0"]?today.sp["0"][0]:0;
+      el.textContent="today "+fmt(tc)+" · net up "+fmt(chin?chin.net_up:0)+" this season · live, this page";
+    }
+    if(rw&&rw.season){
+      if((el=document.getElementById("ro-rw")))el.textContent=fmt(rw.season.up);
+      if((el=document.getElementById("ro-rw-s"))){
+        var td=(rw.summary||[]).filter(function(r){return /^today$/i.test(r.label);})[0];
+        el.innerHTML=(td?"today "+fmt(td.up)+" up · ":"")+"net "+fmt(rw.season.net)+" since Aug 1 · as of "+esc(shortDate(rw.last_day))+
+          (rw.stale?" (stale)":"")+' · raw scanner count, all species · <a href="'+esc(rw.url||"https://www.riverwatcherdaily.is/?I=133")+'" target="_blank" rel="noopener">riverwatcherdaily.is</a>';
+      }
+    }
     drawChart();
   }
 
@@ -276,6 +351,7 @@
     var years=(hist.cumhist&&hist.cumhist.gan)||{}; var yk=Object.keys(years);
     var fc=hist.forecast||{}; var YMAX=fc.ymax||28000, YSTEP=fc.ystep||5000;
     var s2026=(cur.series&&cur.series.ganaraska)||[];
+    var srw=(rw&&rw.series_up)||[];
     var css=getComputedStyle(document.documentElement);
     var col=function(n){return css.getPropertyValue(n).trim();};
     var W=1000,H=440,PL=64,PR=18,PT=16,PB=34; var dpr=Math.min(2,window.devicePixelRatio||1);
@@ -284,15 +360,12 @@
     var n=DOY1-DOY0+1;
     var X=function(i){return PL+(W-PL-PR)*(i/(n-1));};
     var Y=function(v){return H-PB-(H-PT-PB)*(Math.max(0,Math.min(YMAX,v))/YMAX);};
-    // grid + y labels
     g.strokeStyle=col("--line"); g.fillStyle=col("--muted"); g.font="12px "+col("--ui")+",sans-serif"; g.lineWidth=1;
     for(var v=0;v<=YMAX;v+=YSTEP){ g.beginPath();g.moveTo(PL,Y(v));g.lineTo(W-PR,Y(v));g.stroke();
       g.textAlign="right";g.fillText((v/1000)+"k",PL-8,Y(v)+4); }
-    // x month ticks
     var ticks=[[227,"Aug 15"],[244,"Sep 1"],[274,"Oct 1"],[305,"Nov 1"],[319,"Nov 15"]];
     g.textAlign="center";
     ticks.forEach(function(tk){var i=tk[0]-DOY0; if(i<0||i>=n)return; g.fillText(tk[1],X(i),H-12);});
-    // historical band (min..max) + median
     var lo=[],hi=[],md=[];
     for(var i=0;i<n;i++){var vals=[];for(var j=0;j<yk.length;j++){var a=years[yk[j]];if(a&&a[i]!=null&&a[i]>=0)vals.push(a[i]);}
       if(vals.length){vals.sort(function(x,y){return x-y;});lo[i]=vals[0];hi[i]=vals[vals.length-1];md[i]=vals[Math.floor(vals.length/2)];}else{lo[i]=hi[i]=md[i]=null;}}
@@ -300,33 +373,80 @@
     for(var i=0;i<n;i++){if(hi[i]==null)continue;if(!started){g.moveTo(X(i),Y(hi[i]));started=true;}else g.lineTo(X(i),Y(hi[i]));}
     for(var i=n-1;i>=0;i--){if(lo[i]==null)continue;g.lineTo(X(i),Y(lo[i]));}
     g.closePath();g.fillStyle=col("--band");g.globalAlpha=.55;g.fill();g.globalAlpha=1;
-    // median dashed
     g.strokeStyle=col("--muted");g.lineWidth=1.4;g.setLineDash([5,4]);g.beginPath();started=false;
     for(var i=0;i<n;i++){if(md[i]==null)continue;if(!started){g.moveTo(X(i),Y(md[i]));started=true;}else g.lineTo(X(i),Y(md[i]));}
     g.stroke();g.setLineDash([]);
-    // forecast band + call
     if(fc.call){ g.fillStyle=col("--accent");g.globalAlpha=.10;
       g.fillRect(X(n-1)-2,Y(fc.dhi),PR+2,Y(fc.dlo)-Y(fc.dhi));g.globalAlpha=1;
       g.strokeStyle=col("--accent");g.globalAlpha=.55;g.setLineDash([3,3]);g.beginPath();g.moveTo(PL,Y(fc.call));g.lineTo(W-PR,Y(fc.call));g.stroke();g.setLineDash([]);g.globalAlpha=1;
       g.fillStyle=col("--accent");g.textAlign="right";g.fillText("forecast "+(fc.call/1000).toFixed(1)+"k",W-PR-4,Y(fc.call)-6); }
-    // 2026 live line
-    g.strokeStyle=col("--chinook");g.lineWidth=3;g.beginPath();started=false;var lastI=-1,lastV=0;
-    for(var i=0;i<n;i++){var v=s2026[i];if(v==null)continue;if(!started){g.moveTo(X(i),Y(v));started=true;}else g.lineTo(X(i),Y(v));lastI=i;lastV=v;}
-    g.stroke();
-    if(lastI>=0){g.fillStyle=col("--chinook");g.beginPath();g.arc(X(lastI),Y(lastV),4.5,0,7);g.fill();
-      var sub=document.getElementById("chartsub"); if(sub)sub.textContent="\u00b7 2026 to date: "+fmt(lastV);}
+    function line(series,color,width){
+      g.strokeStyle=color;g.lineWidth=width;g.beginPath();var st=false,li=-1,lv=0;
+      for(var i=0;i<n;i++){var v=series[i];if(v==null)continue;if(!st){g.moveTo(X(i),Y(v));st=true;}else g.lineTo(X(i),Y(v));li=i;lv=v;}
+      g.stroke();
+      if(li>=0){g.fillStyle=color;g.beginPath();g.arc(X(li),Y(lv),4.5,0,7);g.fill();}
+      return lv;
+    }
+    var rwv=srw.length?line(srw,col("--accent2"),2.2):null;
+    var mv=line(s2026,col("--chinook"),3);
+    var sub=document.getElementById("chartsub");
+    if(sub)sub.textContent="· model "+fmt(lastVal(s2026)||0)+(rwv!=null?" · counter "+fmt(rwv):"");
   }
 
-  function merge(m){ if(m.model)Object.assign(cur,m.model); if(m.series)cur.series=m.series; if(m.events)cur.events=m.events; draw(); }
   function tick(){
     var t=Date.now();
     Promise.all([
       fetch("model_live.json?t="+t,{cache:"no-store"}).then(function(r){return r.json();}).catch(function(){return null;}),
       fetch("run_series.json?t="+t,{cache:"no-store"}).then(function(r){return r.json();}).catch(function(){return null;}),
-      fetch("events.json?t="+t,{cache:"no-store"}).then(function(r){return r.json();}).catch(function(){return null;})
-    ]).then(function(a){ if(a[0])Object.assign(cur,a[0]); if(a[1])cur.series=a[1]; if(a[2])cur.events=a[2]; draw(); });
+      fetch("events.json?t="+t,{cache:"no-store"}).then(function(r){return r.json();}).catch(function(){return null;}),
+      fetch("riverwatcher.json?t="+t,{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.json();}).catch(function(){
+        // fall back to the run pool's twice-daily copy (same origin)
+        return fetch("/guess-the-run/data/counts.json?t="+t,{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
+          var g=d&&d.gan; if(!g)return null;
+          var start=227, cum=0, by={}, series=[];
+          (g.daily||[]).forEach(function(r){var dd=new Date(r[0]+"T12:00:00"); var doy=Math.floor((dd-new Date(dd.getFullYear(),0,0))/864e5); by[doy]=(by[doy]||0)+r[1];});
+          var last=g.last_day?Math.floor((new Date(g.last_day+"T12:00:00")-new Date(new Date(g.last_day).getFullYear(),0,0))/864e5):-1;
+          for(var doy=1;doy<=319;doy++){cum+=by[doy]||0; if(doy>=start)series.push(doy<=last?cum:null);}
+          return {season:g.season, summary:g.summary, last_day:g.last_day, url:g.url, series_up:series, stale:!!g.stale};
+        }).catch(function(){return null;});
+      })
+    ]).then(function(a){ if(a[0])Object.assign(cur,a[0]); if(a[1])cur.series=a[1]; if(a[2])cur.events=a[2]; if(a[3])rw=a[3]; draw(); });
   }
   draw(); tick(); setInterval(tick,180000); window.addEventListener("resize",drawChart);
+})();
+</script>
+<script>
+(function(){
+  // Status light: status.json is a heartbeat from the counting machine (every ~10 min even
+  // when nothing changes). Green = frames arriving + cutter caught up; amber = catching up;
+  // red = feed down (counter PC / link) or no heartbeat at all (this machine / publisher).
+  var el=document.getElementById("status"), tx=document.getElementById("stext"), up=document.getElementById("updated");
+  if(!el)return;
+  function fT(d){return d.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});}
+  function fDT(d){ var now=new Date(); return d.toDateString()===now.toDateString()?fT(d):(d.toLocaleDateString([], {month:"short", day:"numeric"})+" "+fT(d)); }
+  function set(level,text,title){ el.className="status "+level; tx.textContent=text; el.title=title||""; }
+  function tick(){
+    fetch("status.json?t="+Date.now(),{cache:"no-store"}).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(s){
+      var t=new Date(s.ts), age=(Date.now()-t.getTime())/1000;
+      var f=s.feed||{}, c=s.cutter||{};
+      var det="Heartbeat "+t.toLocaleString()+"\nFeed: "+(f.ok?"frames arriving":"no frames")+(f.age_s!=null?" ("+Math.round(f.age_s)+" s since last frame)":"")+
+              "\nCutter lag: "+(c.lag_s!=null?Math.round(c.lag_s)+" s":"–")+"\nClips today: "+(s.clips_today||0);
+      window.GL_STATUS_OK=true;
+      if(age>1500){ set("down","No update since "+fDT(t),det); }
+      else if(s.level==="down"){ var lf=f.last_frame?new Date(f.last_frame):null; set("down","Feed offline"+(lf?" since "+fDT(lf):""),det); }
+      else if(s.level==="warn"){ set("warn",s.msg||"Catching up",det); }
+      else { set("ok","Live",det); }
+      if(up)up.textContent="Updated "+fDT(t);
+    }).catch(function(){
+      // no heartbeat file (older publisher): judge by the counts' own timestamp
+      var u=window.GL_UPDATED?new Date(window.GL_UPDATED):null;
+      if(!u){ set("warn","Waiting for data",""); return; }
+      var age=(Date.now()-u.getTime())/1000;
+      if(age>1500) set("down","No update since "+fDT(u),""); else set("ok","Live","");
+      if(up)up.textContent="Updated "+fDT(u);
+    });
+  }
+  tick(); setInterval(tick,60000);
 })();
 </script>
 <script>
@@ -375,49 +495,33 @@
 })();
 </script>
 <!-- DAILY_COUNT_START -->
-<style>
-  #daily-counts .dc-big{font-family:var(--mono,monospace);font-size:46px;font-weight:700;color:var(--ink);line-height:1.1}
-  #daily-counts .dc-net{font-family:var(--mono,monospace);font-size:20px;color:var(--muted);font-weight:600}
-  #daily-counts .dc-sub{font-family:var(--mono,monospace);font-size:13.5px;color:var(--muted);margin:4px 0 14px}
-  #daily-counts .dc-days{font-family:var(--mono,monospace);font-size:13px;color:var(--ink2);line-height:2.1;border-top:1px solid var(--line);padding-top:10px}
-  #daily-counts .dc-days b{color:var(--ink);font-weight:600}
-  #daily-counts .dc-days span{color:var(--muted)}
-</style>
 <script>
 (function(){
+  // Daily counts live inside "This season so far": today (big), the last 7 days as bars,
+  // then the season totals. Data: model_live.json "daily" = per day {sp: [seen, net_up]}.
   var SPN={0:"Chinook",1:"Coho",2:"Atlantic",3:"Rainbow",4:"Brown"};
   var last="";
-  function ensure(){
-    var sec=document.getElementById("daily-counts");
-    if(sec)return sec;
-    sec=document.createElement("section"); sec.id="daily-counts";
-    sec.innerHTML='<h2>Daily count</h2><div id="dc-today"></div><div class="dc-days" id="dc-days"></div>';
-    var h2s=document.getElementsByTagName("h2"), cur=null;
-    for(var i=0;i<h2s.length;i++){var t=(h2s[i].textContent||"");
-      if(t.indexOf("Current Count")===0&&h2s[i].closest){cur=h2s[i].closest("section");break;}}
-    if(cur&&cur.parentNode)cur.parentNode.insertBefore(sec,cur);
-    else document.body.appendChild(sec);
-    return sec;
-  }
-  function brk(sp){var p=[];for(var s=0;s<5;s++){var v=sp&&sp[s];if(v&&v[0])p.push(v[0]+" "+SPN[s]);}return p.join(" &middot; ");}
+  function esc(x){return String(x==null?"":x).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c];});}
+  function brk(sp){var p=[];for(var s=0;s<5;s++){var v=sp&&sp[s];if(v&&v[0])p.push(v[0]+" "+SPN[s]);}return p.join(" · ");}
   function tots(sp){var a=0,n=0;for(var s=0;s<5;s++){var v=sp&&sp[s];if(v){a+=v[0];n+=v[1];}}return [a,n];}
   function tick(){
     fetch("model_live.json?t="+Date.now(),{cache:"no-store"}).then(function(r){return r.json();}).then(function(d){
-      var days=(d&&d.daily)||[]; if(!days.length)return;
-      var sig=(d.updated||"")+":"+days.length; if(sig===last)return; last=sig;
-      ensure();
+      var days=(d&&d.daily)||[];
+      var sig=(d&&d.updated||"")+":"+days.length; if(sig===last)return; last=sig;
       var now=new Date();
       var tiso=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
-      var today=null;
-      for(var i=0;i<days.length;i++)if(days[i].date===tiso)today=days[i];
-      var t=tots(today&&today.sp);
-      document.getElementById("dc-today").innerHTML=
-        '<div class="dc-big">'+t[0]+' <span class="dc-net">&#9650;'+t[1]+' up today</span></div>'+
-        '<div class="dc-sub">'+(t[0]?brk(today.sp):'quiet so far today')+'</div>';
-      document.getElementById("dc-days").innerHTML=days.filter(function(dy){return dy.date!==tiso;}).slice(0,7).map(function(dy){
-        var v=tots(dy.sp);
-        return '<div><b>'+dy.label+'</b> &nbsp;'+v[0]+' &#9650;'+v[1]+' &nbsp;<span>'+brk(dy.sp)+'</span></div>';
-      }).join("");
+      var today=null; days.forEach(function(dy){if(dy.date===tiso)today=dy;});
+      var t=tots(today&&today.sp), el;
+      if((el=document.getElementById("dc-today-n")))el.textContent=t[0];
+      if((el=document.getElementById("dc-today-up")))el.textContent=t[0]?("▲"+t[1]+" up"):"";
+      if((el=document.getElementById("dc-today-sp")))el.textContent=t[0]?brk(today.sp):"quiet so far today";
+      if((el=document.getElementById("dc-asof"))&&d.updated){var u=new Date(d.updated);el.textContent="to "+u.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});}
+      var prev=days.filter(function(dy){return dy.date!==tiso;}).slice(0,7);
+      var mx=Math.max(1,t[0]); prev.forEach(function(dy){mx=Math.max(mx,tots(dy.sp)[0]);});
+      if((el=document.getElementById("dc-days")))el.innerHTML=prev.map(function(dy){
+        var v=tots(dy.sp), w=Math.round(100*v[0]/mx);
+        return '<div class="day" title="'+esc(brk(dy.sp))+'"><span class="d">'+esc(dy.label)+'</span><span class="bar"><i style="width:'+w+'%"></i></span><span class="n">'+v[0]+(v[0]?'<em>▲'+v[1]+'</em>':'')+'</span></div>';
+      }).join("")||'<div class="day"><span class="d muted" style="grid-column:1/4">First day of counting.</span></div>';
     }).catch(function(){});
   }
   tick(); setInterval(tick, 60000);
