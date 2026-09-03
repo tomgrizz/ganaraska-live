@@ -1,21 +1,21 @@
 {
-  "updated": "2026-09-03T05:19:15",
+  "updated": "2026-09-03T05:40:41",
   "site": "Ganaraska",
-  "clips_identified": 1187,
+  "clips_identified": 1190,
   "daily": [
     {
       "date": "2026-09-03",
       "label": "Sep 03",
       "sp": {
-        "3": [
-          2,
+        "5": [
+          5,
           1
         ]
       },
       "dir": {
         "up": 1,
         "down": 0,
-        "stay": 1
+        "stay": 4
       }
     },
     {
@@ -23,16 +23,16 @@
       "label": "Sep 02",
       "sp": {
         "0": [
-          166,
-          43
-        ],
-        "3": [
-          39,
-          3
+          41,
+          34
         ],
         "4": [
           1,
           0
+        ],
+        "5": [
+          164,
+          12
         ]
       },
       "dir": {
@@ -83,11 +83,11 @@
       "date": "2026-08-30",
       "label": "Aug 30",
       "sp": {
-        "0": [
+        "4": [
           1,
           1
         ],
-        "4": [
+        "5": [
           1,
           1
         ]
@@ -126,8 +126,12 @@
           14
         ],
         "3": [
-          2,
-          2
+          1,
+          1
+        ],
+        "5": [
+          1,
+          1
         ]
       },
       "dir": {
@@ -141,16 +145,20 @@
       "label": "Aug 27",
       "sp": {
         "0": [
-          37,
-          25
+          36,
+          24
         ],
         "3": [
           6,
           2
         ],
         "4": [
+          1,
+          0
+        ],
+        "5": [
           3,
-          1
+          2
         ]
       },
       "dir": {
@@ -183,8 +191,8 @@
       "label": "Aug 25",
       "sp": {
         "0": [
-          67,
-          64
+          62,
+          59
         ],
         "3": [
           1,
@@ -193,6 +201,10 @@
         "4": [
           8,
           4
+        ],
+        "5": [
+          5,
+          5
         ]
       },
       "dir": {
@@ -205,13 +217,9 @@
       "date": "2026-08-24",
       "label": "Aug 24",
       "sp": {
-        "0": [
-          2,
-          2
-        ],
-        "3": [
-          2,
-          2
+        "5": [
+          4,
+          4
         ]
       },
       "dir": {
@@ -226,24 +234,41 @@
       "sp": 0,
       "name": "Chinook",
       "hex": "#E68200",
-      "activity": 570,
-      "net_up": 380
+      "activity": 436,
+      "net_up": 362
     },
     {
       "sp": 3,
       "name": "Rainbow",
       "hex": "#B43CDC",
-      "activity": 52,
-      "net_up": 11
+      "activity": 8,
+      "net_up": 4
     },
     {
       "sp": 4,
       "name": "Brown",
       "hex": "#B8901E",
-      "activity": 35,
-      "net_up": 17
+      "activity": 33,
+      "net_up": 16
+    },
+    {
+      "sp": 5,
+      "name": "Unclassified salmonid",
+      "hex": "#7A8088",
+      "activity": 183,
+      "net_up": 26
     }
   ],
+  "water": {
+    "vis": 0.491,
+    "turbid": true,
+    "since": "2026-09-02T07:19:45",
+    "threshold": 0.55,
+    "latest": "Ganaraska/2026-09-03/05-24-33.mp4",
+    "strong_conf": 0.75,
+    "unclassified": 183,
+    "scored": 1793
+  },
   "latest_clip": "latest_model_id.mp4",
   "activity_img": "activity_model.png"
 }

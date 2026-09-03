@@ -489,7 +489,7 @@
       var nowD=new Date(), tdoy=Math.floor((nowD-new Date(nowD.getFullYear(),0,0))/864e5);
       m=Math.max(15,Math.min(nAll,tdoy-DOY0+6));
       var peak=0;
-      for(var q=0;q<m;q++){ if(s2026[q]!=null)peak=Math.max(peak,s2026[q]); if(srw[q]!=null)peak=Math.max(peak,srw[q]); if(md[q]!=null)peak=Math.max(peak,md[q]); }
+      for(var q=0;q<m;q++){ if(s2026[q]!=null)peak=Math.max(peak,s2026[q]); if(srw[q]!=null)peak=Math.max(peak,srw[q]); }
       var nice=function(v){ if(v<=0)return 100; var p=Math.pow(10,Math.floor(Math.log(v)/Math.LN10)), f=v/p; return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p; };
       YMAX=nice(peak*1.15); YSTEP=YMAX/5;
     }
