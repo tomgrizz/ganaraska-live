@@ -48,12 +48,21 @@
   .arr{width:.72em;height:.72em;fill:currentColor;flex:none;display:inline-block}
   .today-sp{font-family:var(--ui);font-size:13.5px;color:var(--ink2);margin-top:4px;min-height:1.4em}
   .days{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
-  .day{display:grid;grid-template-columns:52px 1fr 96px;column-gap:10px;align-items:center;padding:5px 0;font-family:var(--mono);font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
+  .day{display:grid;grid-template-columns:52px 1fr 124px;column-gap:10px;align-items:center;padding:5px 0;font-family:var(--mono);font-size:12.5px;color:var(--ink2);font-variant-numeric:tabular-nums}
   .day .d{color:var(--muted)}
   .day .bar{height:9px;border-radius:5px;background:var(--band);overflow:hidden;position:relative}
   .day .bar i{position:absolute;top:0;bottom:0;left:0;display:block}
   .day .bar i.u{background:var(--ok);border-radius:5px 0 0 5px}
   .day .bar i.dn{background:var(--down);opacity:.8}
+  .day .bar i.rw{width:2px;margin-left:-2px;background:var(--ink2);opacity:.8;top:-1px;bottom:-1px}
+  .day .n .rw{color:var(--muted);font-weight:500;min-width:30px;justify-content:flex-end}
+  .days-key i.k-rw{width:2px;height:11px;border-radius:0;background:var(--ink2);opacity:.8}
+  .today-rw{font-family:var(--mono);font-size:13px;color:var(--muted);white-space:nowrap}
+  .hd-r{display:inline-flex;align-items:center;gap:12px;margin-left:auto;flex-wrap:wrap;justify-content:flex-end}
+  .seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;gap:2px;background:var(--bg)}
+  .seg button{font:600 11.5px/1 var(--ui);color:var(--muted);background:transparent;border:0;border-radius:999px;padding:6px 11px;cursor:pointer}
+  .seg button:hover{color:var(--ink)}
+  .seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
   .day .n{display:flex;justify-content:flex-end;gap:9px;white-space:nowrap}
   .day .n span{display:inline-flex;align-items:center;gap:3px;font-weight:600}
   .day .n .up{color:var(--ok)} .day .n .down{color:var(--down)}
@@ -170,10 +179,10 @@
     <div class="card">
       <div class="hd">This season so far <span class="muted" style="font-weight:400;font-size:12px" id="dc-asof"></span></div>
       <div class="bd">
-        <div class="today"><span class="today-lbl">Today:</span><span class="today-n" id="dc-today-n">0</span><span class="today-up" id="dc-today-up"></span><span class="today-dn" id="dc-today-dn"></span></div>
+        <div class="today"><span class="today-lbl">Today:</span><span class="today-n" id="dc-today-n">0</span><span class="today-up" id="dc-today-up"></span><span class="today-dn" id="dc-today-dn"></span><span class="today-rw" id="dc-today-rw"></span></div>
         <div class="today-sp" id="dc-today-sp">quiet so far</div>
         <div class="days" id="dc-days"></div>
-        <div class="days-key"><span><i style="background:var(--ok)"></i>fish moving upstream</span><span><i style="background:var(--down);opacity:.8"></i>downstream</span></div>
+        <div class="days-key"><span><i style="background:var(--ok)"></i>model, fish moving upstream</span><span><i style="background:var(--down);opacity:.8"></i>downstream</span><span><i class="k-rw"></i>Riverwatcher counter, fish up (all species)</span></div>
       </div>
     </div>
   </div>
@@ -183,23 +192,23 @@
     <div class="readouts">
       <div class="ro model">
         <span class="ro-n" id="ro-model">&mdash;</span>
-        <span class="ro-l">Chinook identified by the model</span>
+        <span class="ro-l">Chinook counted upstream, model</span>
         <span class="ro-s" id="ro-model-s">live, from the clips on this page</span>
       </div>
       <div class="ro rw">
         <span class="ro-n" id="ro-rw">&mdash;</span>
-        <span class="ro-l">Fish up, Riverwatcher counter</span>
-        <span class="ro-s" id="ro-rw-s">raw scanner count, all species, since Aug 1 &middot; <a href="https://www.riverwatcherdaily.is/?I=133" target="_blank" rel="noopener">riverwatcherdaily.is</a></span>
+        <span class="ro-l">Fish counted upstream, Riverwatcher &middot; same days</span>
+        <span class="ro-s" id="ro-rw-s">raw scanner count, all species &middot; <a href="https://www.riverwatcherdaily.is/?I=133" target="_blank" rel="noopener">riverwatcherdaily.is</a></span>
       </div>
     </div>
-    <div class="hd">Cumulative past the counter <span class="muted" id="chartsub"></span></div>
+    <div class="hd">Cumulative past the counter <span class="hd-r"><span class="muted" id="chartsub"></span><span class="seg" role="group" aria-label="Chart range"><button type="button" data-view="sofar" aria-pressed="true">So far</button><button type="button" data-view="season" aria-pressed="false">Full season</button></span></span></div>
     <div class="bd" style="padding:14px 14px 4px"><canvas id="runchart" width="1000" height="440"></canvas></div>
     <div class="legend">
-      <span><span class="sw" style="background:var(--chinook)"></span> 2026 model (Chinook)</span>
-      <span><span class="sw" style="background:var(--accent2)"></span> 2026 Riverwatcher counter (raw, all species)</span>
+      <span><span class="sw" style="background:var(--chinook)"></span> 2026 model (Chinook counted upstream, since Aug 24)</span>
+      <span><span class="sw" style="background:var(--accent2)"></span> 2026 Riverwatcher counter (fish up, all species, since Aug 1)</span>
       <span><span class="swb"></span> 2020&ndash;2025 range</span>
       <span><span class="sw" style="background:var(--muted)"></span> past-years median</span>
-      <span><span class="sw" style="background:var(--accent);opacity:.6"></span> 2026 forecast &plusmn;21%</span>
+      <span id="lg-fc"><span class="sw" style="background:var(--accent);opacity:.6"></span> 2026 forecast &plusmn;21%</span>
     </div>
   </div>
 
@@ -360,6 +369,11 @@
 (function(){
   var HEX={0:"#E68200",1:"#00A8C8",2:"#28A745",3:"#B43CDC",4:"#B8901E"};
   var DOY0=227, DOY1=319;
+  var MODEL_START="2026-08-25";   // counting began Aug 24 3:45 PM; Aug 25 is the first full day
+  var chartView="sofar";
+  try{ if(localStorage.getItem("gl-chart")==="season")chartView="season"; }catch(e){}
+  function rwDaily(){ var m={}; ((rw&&rw.daily)||[]).forEach(function(r){m[r[0]]=r;}); return m; }
+  function rwWindow(){ var u=0,d=0,n=0; ((rw&&rw.daily)||[]).forEach(function(r){ if(r[0]>=MODEL_START){u+=r[1]||0;d+=r[2]||0;n++;} }); return {up:u,down:d,net:u-d,days:n}; }
   var hist=JSON.parse(document.getElementById("hist").textContent||"{}");
   var boot=JSON.parse(document.getElementById("boot").textContent||"{}");
   var cur=boot, rw=null;
@@ -398,19 +412,23 @@
     var now=new Date(), tiso=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
     var today=null; days.forEach(function(dy){if(dy.date===tiso)today=dy;});
     var tn=today?seen(today):0, td=today?dirOf(today):{up:0,down:0};
+    var rwd=rwDaily(), rwt=rwd[tiso];
     if((el=document.getElementById("dc-today-n")))el.textContent=tn;
     if((el=document.getElementById("dc-today-up")))el.innerHTML=tn?ARR_UP+td.up+" up":"";
     if((el=document.getElementById("dc-today-dn")))el.innerHTML=(tn&&td.down)?ARR_DN+td.down+" down":"";
     if((el=document.getElementById("dc-today-sp")))el.textContent=tn?brk(today.sp):"quiet so far";
+    if((el=document.getElementById("dc-today-rw")))el.textContent=rwt?("counter "+fmt(rwt[1])+" up"):"";
     if((el=document.getElementById("dc-asof"))&&cur.updated){var u=new Date(cur.updated);el.textContent="as of "+u.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});}
     var prev=days.filter(function(dy){return dy.date!==tiso;}).slice(0,7);
-    var mx=Math.max(1,td.up+td.down);
-    var rowsD=prev.map(function(dy){var d=dirOf(dy); mx=Math.max(mx,d.up+d.down); return [dy,d];});
+    var mx=Math.max(1,td.up+td.down,rwt?rwt[1]:0);
+    var rowsD=prev.map(function(dy){var d=dirOf(dy), c=rwd[dy.date]?rwd[dy.date][1]:null; mx=Math.max(mx,d.up+d.down,c||0); return [dy,d,c];});
     if((el=document.getElementById("dc-days")))el.innerHTML=rowsD.map(function(r){
-      var dy=r[0], d=r[1], wu=100*d.up/mx, wd=100*d.down/mx;
-      return '<div class="day" title="'+esc(seen(dy)+' identified: '+brk(dy.sp))+'"><span class="d">'+esc(dy.label)+'</span>'+
-        '<span class="bar"><i class="u" style="width:'+wu.toFixed(1)+'%"></i><i class="dn" style="left:'+wu.toFixed(1)+'%;width:'+wd.toFixed(1)+'%"></i></span>'+
-        '<span class="n"><span class="up">'+ARR_UP+d.up+'</span><span class="down">'+ARR_DN+d.down+'</span></span></div>';
+      var dy=r[0], d=r[1], c=r[2], wu=100*d.up/mx, wd=100*d.down/mx;
+      var tip=seen(dy)+' identified: '+brk(dy.sp)+(c!=null?' | counter '+c+' up':'');
+      return '<div class="day" title="'+esc(tip)+'"><span class="d">'+esc(dy.label)+'</span>'+
+        '<span class="bar"><i class="u" style="width:'+wu.toFixed(1)+'%"></i><i class="dn" style="left:'+wu.toFixed(1)+'%;width:'+wd.toFixed(1)+'%"></i>'+
+        (c!=null?'<i class="rw" style="left:'+(100*c/mx).toFixed(1)+'%"></i>':'')+'</span>'+
+        '<span class="n"><span class="up">'+ARR_UP+d.up+'</span><span class="down">'+ARR_DN+d.down+'</span><span class="rw" title="Riverwatcher counter, fish up">'+(c!=null?c:'')+'</span></span></div>';
     }).join("")||'<div class="day"><span class="d" style="grid-column:1/4">First day of counting.</span></div>';
   }
   function shortDate(iso){ if(!iso)return ""; var d=new Date(iso+"T12:00:00"); return d.toLocaleDateString([], {month:"short", day:"numeric"}); }
@@ -435,18 +453,21 @@
     renderDaily();
     // readouts: model (Chinook identified) vs Riverwatcher (raw up-count)
     var chin=(cur.totals||[]).filter(function(x){return x.sp===0;})[0];
-    if((el=document.getElementById("ro-model")))el.textContent=chin?fmt(chin.activity):"0";
+    var now=new Date(), tiso=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
+    var cu=0,cd=0,ctu=0;
+    (cur.events||[]).forEach(function(e){ if(e.sp!==0)return; if(e.direction==="up"){cu++; if(String(e.iso||"").slice(0,10)===tiso)ctu++;} else if(e.direction==="down")cd++; });
+    if((el=document.getElementById("ro-model")))el.textContent=fmt(cu);
     if((el=document.getElementById("ro-model-s"))){
-      var today=null, now=new Date(), tiso=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
-      (cur.daily||[]).forEach(function(dy){if(dy.date===tiso)today=dy;});
-      var tc=today&&today.sp&&today.sp["0"]?today.sp["0"][0]:0;
-      el.textContent="today "+fmt(tc)+" · net up "+fmt(chin?chin.net_up:0)+" this season · live, from the clips on this page";
+      el.textContent="today "+fmt(ctu)+" up · "+fmt(cd)+" down · "+fmt(chin?chin.activity:0)+" Chinook identified in total"+
+        " · counting since "+shortDate(MODEL_START)+" · live, from the clips on this page";
     }
     if(rw&&rw.season){
-      if((el=document.getElementById("ro-rw")))el.textContent=fmt(rw.season.up);
+      var w=rwWindow();
+      if((el=document.getElementById("ro-rw")))el.textContent=fmt(w.up);
       if((el=document.getElementById("ro-rw-s"))){
         var td=(rw.summary||[]).filter(function(r){return /^today$/i.test(r.label);})[0];
-        el.innerHTML=(td?"today "+fmt(td.up)+" up · ":"")+"net "+fmt(rw.season.net)+" since Aug 1 · as of "+esc(shortDate(rw.last_day))+
+        el.innerHTML=(td?"today "+fmt(td.up)+" up · ":"")+fmt(w.down)+" down since "+esc(shortDate(MODEL_START))+
+          " · full season since Aug 1: "+fmt(rw.season.up)+" up, net "+fmt(rw.season.net)+" · as of "+esc(shortDate(rw.last_day))+
           (rw.stale?" (stale)":"")+' · raw scanner count, all species · <a href="'+esc(rw.url||"https://www.riverwatcherdaily.is/?I=133")+'" target="_blank" rel="noopener">riverwatcherdaily.is</a>';
       }
     }
@@ -459,23 +480,34 @@
     var fc=hist.forecast||{}; var YMAX=fc.ymax||28000, YSTEP=fc.ystep||5000;
     var s2026=(cur.series&&cur.series.ganaraska)||[];
     var srw=(rw&&rw.series_up)||[];
+    var sofar=chartView==="sofar";
+    var nAll=DOY1-DOY0+1, m=nAll;
+    var lo=[],hi=[],md=[];
+    for(var i=0;i<nAll;i++){var vals=[];for(var j=0;j<yk.length;j++){var a=years[yk[j]];if(a&&a[i]!=null&&a[i]>=0)vals.push(a[i]);}
+      if(vals.length){vals.sort(function(x,y){return x-y;});lo[i]=vals[0];hi[i]=vals[vals.length-1];md[i]=vals[Math.floor(vals.length/2)];}else{lo[i]=hi[i]=md[i]=null;}}
+    if(sofar){
+      var nowD=new Date(), tdoy=Math.floor((nowD-new Date(nowD.getFullYear(),0,0))/864e5);
+      m=Math.max(15,Math.min(nAll,tdoy-DOY0+6));
+      var peak=0;
+      for(var q=0;q<m;q++){ if(s2026[q]!=null)peak=Math.max(peak,s2026[q]); if(srw[q]!=null)peak=Math.max(peak,srw[q]); if(md[q]!=null)peak=Math.max(peak,md[q]); }
+      var nice=function(v){ if(v<=0)return 100; var p=Math.pow(10,Math.floor(Math.log(v)/Math.LN10)), f=v/p; return (f<=1?1:f<=2?2:f<=2.5?2.5:f<=5?5:10)*p; };
+      YMAX=nice(peak*1.15); YSTEP=YMAX/5;
+    }
     var css=getComputedStyle(document.documentElement);
     var col=function(n){return css.getPropertyValue(n).trim();};
     var W=1000,H=440,PL=64,PR=18,PT=16,PB=34; var dpr=Math.min(2,window.devicePixelRatio||1);
     cv.width=W*dpr; cv.height=H*dpr; cv.style.height=(H*(cv.clientWidth/W))+"px";
     var g=cv.getContext("2d"); g.setTransform(dpr,0,0,dpr,0,0); g.clearRect(0,0,W,H);
-    var n=DOY1-DOY0+1;
+    var n=m;
     var X=function(i){return PL+(W-PL-PR)*(i/(n-1));};
     var Y=function(v){return H-PB-(H-PT-PB)*(Math.max(0,Math.min(YMAX,v))/YMAX);};
     g.strokeStyle=col("--line"); g.fillStyle=col("--muted"); g.font="12px "+col("--ui")+",sans-serif"; g.lineWidth=1;
-    for(var v=0;v<=YMAX;v+=YSTEP){ g.beginPath();g.moveTo(PL,Y(v));g.lineTo(W-PR,Y(v));g.stroke();
-      g.textAlign="right";g.fillText((v/1000)+"k",PL-8,Y(v)+4); }
+    for(var v=0;v<=YMAX+1e-6;v+=YSTEP){ g.beginPath();g.moveTo(PL,Y(v));g.lineTo(W-PR,Y(v));g.stroke();
+      g.textAlign="right";g.fillText(YMAX>5000?(Math.round(v/100)/10)+"k":fmt(Math.round(v)),PL-8,Y(v)+4); }
     var ticks=[[227,"Aug 15"],[244,"Sep 1"],[274,"Oct 1"],[305,"Nov 1"],[319,"Nov 15"]];
+    if(sofar){ ticks=[]; for(var dd=DOY0;dd<DOY0+n;dd+=7){ var dt=new Date(new Date().getFullYear(),0,dd); ticks.push([dd,dt.toLocaleDateString([], {month:"short", day:"numeric"})]); } }
     g.textAlign="center";
     ticks.forEach(function(tk){var i=tk[0]-DOY0; if(i<0||i>=n)return; g.fillText(tk[1],X(i),H-12);});
-    var lo=[],hi=[],md=[];
-    for(var i=0;i<n;i++){var vals=[];for(var j=0;j<yk.length;j++){var a=years[yk[j]];if(a&&a[i]!=null&&a[i]>=0)vals.push(a[i]);}
-      if(vals.length){vals.sort(function(x,y){return x-y;});lo[i]=vals[0];hi[i]=vals[vals.length-1];md[i]=vals[Math.floor(vals.length/2)];}else{lo[i]=hi[i]=md[i]=null;}}
     g.beginPath();var started=false;
     for(var i=0;i<n;i++){if(hi[i]==null)continue;if(!started){g.moveTo(X(i),Y(hi[i]));started=true;}else g.lineTo(X(i),Y(hi[i]));}
     for(var i=n-1;i>=0;i--){if(lo[i]==null)continue;g.lineTo(X(i),Y(lo[i]));}
@@ -483,7 +515,7 @@
     g.strokeStyle=col("--muted");g.lineWidth=1.4;g.setLineDash([5,4]);g.beginPath();started=false;
     for(var i=0;i<n;i++){if(md[i]==null)continue;if(!started){g.moveTo(X(i),Y(md[i]));started=true;}else g.lineTo(X(i),Y(md[i]));}
     g.stroke();g.setLineDash([]);
-    if(fc.call){ g.fillStyle=col("--accent");g.globalAlpha=.10;
+    if(fc.call&&!sofar){ g.fillStyle=col("--accent");g.globalAlpha=.10;
       g.fillRect(X(n-1)-2,Y(fc.dhi),PR+2,Y(fc.dlo)-Y(fc.dhi));g.globalAlpha=1;
       g.strokeStyle=col("--accent");g.globalAlpha=.55;g.setLineDash([3,3]);g.beginPath();g.moveTo(PL,Y(fc.call));g.lineTo(W-PR,Y(fc.call));g.stroke();g.setLineDash([]);g.globalAlpha=1;
       g.fillStyle=col("--accent");g.textAlign="right";g.fillText("forecast "+(fc.call/1000).toFixed(1)+"k",W-PR-4,Y(fc.call)-6); }
@@ -497,7 +529,8 @@
     var rwv=srw.length?line(srw,col("--accent2"),2.2):null;
     var mv=line(s2026,col("--chinook"),3);
     var sub=document.getElementById("chartsub");
-    if(sub)sub.textContent="· model "+fmt(lastVal(s2026)||0)+(rwv!=null?" · counter "+fmt(rwv):"");
+    if(sub)sub.textContent="model "+fmt(lastVal(s2026)||0)+(rwv!=null?" · counter "+fmt(rwv):"");
+    var lf=document.getElementById("lg-fc"); if(lf)lf.style.display=sofar?"none":"";
   }
 
   function tick(){
@@ -514,11 +547,20 @@
           (g.daily||[]).forEach(function(r){var dd=new Date(r[0]+"T12:00:00"); var doy=Math.floor((dd-new Date(dd.getFullYear(),0,0))/864e5); by[doy]=(by[doy]||0)+r[1];});
           var last=g.last_day?Math.floor((new Date(g.last_day+"T12:00:00")-new Date(new Date(g.last_day).getFullYear(),0,0))/864e5):-1;
           for(var doy=1;doy<=319;doy++){cum+=by[doy]||0; if(doy>=start)series.push(doy<=last?cum:null);}
-          return {season:g.season, summary:g.summary, last_day:g.last_day, url:g.url, series_up:series, stale:!!g.stale};
+          return {season:g.season, summary:g.summary, last_day:g.last_day, url:g.url, series_up:series, daily:g.daily||[], stale:!!g.stale};
         }).catch(function(){return null;});
       })
     ]).then(function(a){ if(a[0])Object.assign(cur,a[0]); if(a[1])cur.series=a[1]; if(a[2])cur.events=a[2]; if(a[3])rw=a[3]; draw(); });
   }
+  Array.prototype.forEach.call(document.querySelectorAll(".seg button[data-view]"),function(b){
+    b.addEventListener("click",function(){
+      chartView=b.getAttribute("data-view");
+      try{ localStorage.setItem("gl-chart",chartView); }catch(e){}
+      Array.prototype.forEach.call(document.querySelectorAll(".seg button[data-view]"),function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});
+      drawChart();
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll(".seg button[data-view]"),function(x){x.setAttribute("aria-pressed",x.getAttribute("data-view")===chartView?"true":"false");});
   draw(); tick(); setInterval(tick,180000); window.addEventListener("resize",drawChart);
 })();
 </script>
