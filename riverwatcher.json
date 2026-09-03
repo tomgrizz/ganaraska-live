@@ -1,49 +1,49 @@
 {
- "updated": "2026-09-03T05:16:41-04:00",
- "as_of": "2026-09-03",
- "last_day": "2026-09-02",
+ "updated": "2026-09-11T13:59:21-04:00",
+ "as_of": "2026-09-11",
+ "last_day": "2026-09-11",
  "stale": false,
  "source": "https://www.riverwatcherdaily.is",
  "url": "https://www.riverwatcherdaily.is/?I=133",
  "name": "Ganaraska River, Ontario",
- "window": "Measured migration in [Ganaraska River, Ontario] from Jan 01, 2026 to Sep 03, 2026",
+ "window": "Measured migration in [Ganaraska River, Ontario] from Jan 01, 2026 to Sep 11, 2026",
  "season_start": "2026-08-01",
  "season": {
-  "up": 1076,
-  "down": 149,
-  "net": 927,
-  "days": 21
+  "up": 4997,
+  "down": 520,
+  "net": 4477,
+  "days": 30
  },
  "summary": [
   {
    "label": "Today",
-   "up": 0,
-   "down": 0,
-   "net": 0
+   "up": 282,
+   "down": 5,
+   "net": 277
   },
   {
    "label": "Yesterday",
-   "up": 62,
-   "down": 5,
-   "net": 57
+   "up": 600,
+   "down": 19,
+   "net": 581
   },
   {
    "label": "Last 7 days",
-   "up": 393,
-   "down": 44,
-   "net": 349
+   "up": 3499,
+   "down": 290,
+   "net": 3209
   },
   {
    "label": "Last 30 days",
-   "up": 1076,
-   "down": 149,
-   "net": 927
+   "up": 4891,
+   "down": 491,
+   "net": 4400
   },
   {
    "label": "Fall run, since Aug 1",
-   "up": 1076,
-   "down": 149,
-   "net": 927
+   "up": 4997,
+   "down": 520,
+   "net": 4477
   }
  ],
  "daily": [
@@ -151,6 +151,51 @@
    "2026-09-02",
    62,
    5
+  ],
+  [
+   "2026-09-03",
+   422,
+   81
+  ],
+  [
+   "2026-09-04",
+   249,
+   43
+  ],
+  [
+   "2026-09-05",
+   527,
+   69
+  ],
+  [
+   "2026-09-06",
+   689,
+   86
+  ],
+  [
+   "2026-09-07",
+   523,
+   31
+  ],
+  [
+   "2026-09-08",
+   391,
+   16
+  ],
+  [
+   "2026-09-09",
+   238,
+   21
+  ],
+  [
+   "2026-09-10",
+   600,
+   19
+  ],
+  [
+   "2026-09-11",
+   282,
+   5
   ]
  ],
  "series_up": [
@@ -173,15 +218,15 @@
   764,
   1014,
   1076,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
+  1498,
+  1747,
+  2274,
+  2963,
+  3486,
+  3877,
+  4115,
+  4715,
+  4997,
   null,
   null,
   null,
