@@ -1,25 +1,56 @@
 {
-  "updated": "2026-09-11T14:20:14",
+  "updated": "2026-09-13T00:18:51",
   "site": "Ganaraska",
-  "clips_identified": 4883,
+  "clips_identified": 5274,
   "daily": [
+    {
+      "date": "2026-09-12",
+      "label": "Sep 12",
+      "sp": {
+        "0": [
+          132,
+          112
+        ],
+        "4": [
+          3,
+          1
+        ],
+        "5": [
+          3,
+          3
+        ]
+      },
+      "dir": {
+        "up": 117,
+        "down": 1,
+        "stay": 20
+      }
+    },
     {
       "date": "2026-09-11",
       "label": "Sep 11",
       "sp": {
         "0": [
-          382,
-          261
+          612,
+          464
         ],
         "1": [
+          4,
+          3
+        ],
+        "4": [
           1,
           1
+        ],
+        "5": [
+          12,
+          12
         ]
       },
       "dir": {
-        "up": 264,
-        "down": 2,
-        "stay": 117
+        "up": 483,
+        "down": 3,
+        "stay": 143
       }
     },
     {
@@ -329,25 +360,6 @@
         "down": 0,
         "stay": 0
       }
-    },
-    {
-      "date": "2026-08-29",
-      "label": "Aug 29",
-      "sp": {
-        "0": [
-          5,
-          4
-        ],
-        "4": [
-          6,
-          1
-        ]
-      },
-      "dir": {
-        "up": 5,
-        "down": 0,
-        "stay": 6
-      }
     }
   ],
   "totals": [
@@ -355,15 +367,15 @@
       "sp": 0,
       "name": "Chinook",
       "hex": "#E68200",
-      "activity": 3885,
-      "net_up": 2526
+      "activity": 4247,
+      "net_up": 2841
     },
     {
       "sp": 1,
       "name": "Coho",
       "hex": "#00A8C8",
-      "activity": 36,
-      "net_up": 16
+      "activity": 39,
+      "net_up": 18
     },
     {
       "sp": 3,
@@ -376,26 +388,26 @@
       "sp": 4,
       "name": "Brown",
       "hex": "#B8901E",
-      "activity": 73,
-      "net_up": 39
+      "activity": 77,
+      "net_up": 41
     },
     {
       "sp": 5,
       "name": "Unclassified salmonid",
       "hex": "#7A8088",
-      "activity": 6358,
-      "net_up": 1533
+      "activity": 6373,
+      "net_up": 1548
     }
   ],
   "water": {
-    "vis": 0.723,
-    "turbid": false,
-    "since": null,
+    "vis": 0.407,
+    "turbid": true,
+    "since": "2026-09-12T19:38:19",
     "threshold": 0.55,
-    "latest": "Ganaraska/2026-09-11/14-18-42.mp4",
+    "latest": "Ganaraska/2026-09-12/22-05-40.mp4",
     "strong_conf": 0.75,
-    "unclassified": 6358,
-    "scored": 5623
+    "unclassified": 6373,
+    "scored": 6014
   },
   "latest_clip": "latest_model_id.mp4",
   "activity_img": "activity_model.png"
