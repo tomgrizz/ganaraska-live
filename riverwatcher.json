@@ -1,49 +1,49 @@
 {
- "updated": "2026-09-11T13:59:21-04:00",
- "as_of": "2026-09-11",
- "last_day": "2026-09-11",
+ "updated": "2026-09-26T17:16:12-04:00",
+ "as_of": "2026-09-26",
+ "last_day": "2026-09-26",
  "stale": false,
  "source": "https://www.riverwatcherdaily.is",
  "url": "https://www.riverwatcherdaily.is/?I=133",
  "name": "Ganaraska River, Ontario",
- "window": "Measured migration in [Ganaraska River, Ontario] from Jan 01, 2026 to Sep 11, 2026",
+ "window": "Measured migration in [Ganaraska River, Ontario] from Jan 01, 2026 to Sep 26, 2026",
  "season_start": "2026-08-01",
  "season": {
-  "up": 4997,
-  "down": 520,
-  "net": 4477,
-  "days": 30
+  "up": 11977,
+  "down": 1004,
+  "net": 10973,
+  "days": 45
  },
  "summary": [
   {
    "label": "Today",
-   "up": 282,
-   "down": 5,
-   "net": 277
+   "up": 479,
+   "down": 19,
+   "net": 460
   },
   {
    "label": "Yesterday",
-   "up": 600,
-   "down": 19,
-   "net": 581
+   "up": 634,
+   "down": 38,
+   "net": 596
   },
   {
    "label": "Last 7 days",
-   "up": 3499,
-   "down": 290,
-   "net": 3209
+   "up": 4797,
+   "down": 286,
+   "net": 4511
   },
   {
    "label": "Last 30 days",
-   "up": 4891,
-   "down": 491,
-   "net": 4400
+   "up": 11294,
+   "down": 899,
+   "net": 10395
   },
   {
    "label": "Fall run, since Aug 1",
-   "up": 4997,
-   "down": 520,
-   "net": 4477
+   "up": 11977,
+   "down": 1004,
+   "net": 10973
   }
  ],
  "daily": [
@@ -194,8 +194,83 @@
   ],
   [
    "2026-09-11",
-   282,
-   5
+   597,
+   14
+  ],
+  [
+   "2026-09-12",
+   142,
+   11
+  ],
+  [
+   "2026-09-13",
+   136,
+   8
+  ],
+  [
+   "2026-09-14",
+   237,
+   11
+  ],
+  [
+   "2026-09-15",
+   74,
+   9
+  ],
+  [
+   "2026-09-16",
+   466,
+   88
+  ],
+  [
+   "2026-09-17",
+   346,
+   37
+  ],
+  [
+   "2026-09-18",
+   467,
+   25
+  ],
+  [
+   "2026-09-19",
+   336,
+   13
+  ],
+  [
+   "2026-09-20",
+   480,
+   40
+  ],
+  [
+   "2026-09-21",
+   946,
+   59
+  ],
+  [
+   "2026-09-22",
+   596,
+   40
+  ],
+  [
+   "2026-09-23",
+   661,
+   37
+  ],
+  [
+   "2026-09-24",
+   665,
+   40
+  ],
+  [
+   "2026-09-25",
+   634,
+   38
+  ],
+  [
+   "2026-09-26",
+   479,
+   19
   ]
  ],
  "series_up": [
@@ -226,22 +301,22 @@
   3877,
   4115,
   4715,
-  4997,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
-  null,
+  5312,
+  5454,
+  5590,
+  5827,
+  5901,
+  6367,
+  6713,
+  7180,
+  7516,
+  7996,
+  8942,
+  9538,
+  10199,
+  10864,
+  11498,
+  11977,
   null,
   null,
   null,

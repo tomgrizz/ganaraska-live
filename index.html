@@ -48,11 +48,14 @@
   .fn .dot{vertical-align:-1px}
   .mread{font-family:var(--ui);font-size:11.5px;color:var(--muted);margin-left:6px;white-space:nowrap}
   .col{display:flex;flex-direction:column;gap:18px;min-width:0}
-  .today{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .today{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
   .today-lbl{font-family:var(--sans);font-weight:700;font-size:15px;color:var(--ink)}
-  .today-n{font-family:var(--mono);font-weight:600;font-size:44px;line-height:1;color:var(--ink);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
-  .today-up,.today-dn{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:15px;font-weight:600;white-space:nowrap}
-  .today-up{color:var(--ok)} .today-dn{color:var(--down)}
+  .tstats{display:grid;grid-template-columns:auto auto auto;justify-content:start;column-gap:22px;align-items:end;margin-top:6px}
+  .tstat{display:flex;flex-direction:column;gap:3px;white-space:nowrap}
+  .tstat .k{font-family:var(--ui);font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .tstat b{display:inline-flex;align-items:center;gap:3px;font-family:var(--mono);font-weight:600;font-size:34px;line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .tstat.up b{color:var(--ok)} .tstat.dn b{color:var(--down)}
+  .tstat.tot b{font-size:24px;color:var(--ink2);line-height:1}
   .arr{width:.72em;height:.72em;fill:currentColor;flex:none;display:inline-block}
   .today-sp{font-family:var(--ui);font-size:13.5px;color:var(--ink2);margin-top:4px;min-height:1.4em}
   .days{margin-top:14px;border-top:1px solid var(--line);padding-top:8px}
@@ -190,7 +193,8 @@
     <div class="card">
       <div class="hd">This season so far <span class="muted" style="font-weight:400;font-size:12px" id="dc-asof"></span></div>
       <div class="bd">
-        <div class="today"><span class="today-lbl">Today:</span><span class="today-n" id="dc-today-n">0</span><span class="today-up" id="dc-today-up"></span><span class="today-dn" id="dc-today-dn"></span><span class="today-rw" id="dc-today-rw"></span></div>
+        <div class="today"><span class="today-lbl">Today:</span><span class="today-rw" id="dc-today-rw"></span></div>
+        <div class="tstats"><span class="tstat up"><span class="k">Up</span><b id="dc-today-up">0</b></span><span class="tstat dn"><span class="k">Down</span><b id="dc-today-dn">0</b></span><span class="tstat tot" id="dc-today-tot" title="All fish the model identified today, including fish that held in the tunnel without passing"><span class="k">Total =</span><b id="dc-today-n">0</b></span></div>
         <div class="today-sp" id="dc-today-sp">quiet so far</div>
         <div class="days" id="dc-days"></div>
         <div class="days-key"><span><i style="background:var(--ok)"></i>model, fish moving upstream</span><span><i style="background:var(--down);opacity:.8"></i>downstream</span><span><i class="k-rw"></i>Riverwatcher counter, fish up (all species)</span></div>
@@ -198,24 +202,24 @@
     </div>
   </div>
 
-  <h2>Current count</h2>
+  <h2>Fall season total</h2>
   <div class="card chartcard">
     <div class="readouts">
       <div class="ro model">
         <span class="ro-n" id="ro-model">&mdash;</span>
-        <span class="ro-l">Fish counted upstream, model</span>
-        <span class="ro-s" id="ro-model-s">live, from the clips on this page</span>
+        <span class="ro-l">Fish up this fall, model</span>
+        <span class="ro-s" id="ro-model-s">all species &middot; live, from the clips on this page</span>
       </div>
       <div class="ro rw">
         <span class="ro-n" id="ro-rw">&mdash;</span>
-        <span class="ro-l">Fish counted upstream, Riverwatcher &middot; same days</span>
+        <span class="ro-l">Fish up this fall, Riverwatcher counter</span>
         <span class="ro-s" id="ro-rw-s">raw scanner count, all species &middot; <a href="https://www.riverwatcherdaily.is/?I=133" target="_blank" rel="noopener">riverwatcherdaily.is</a></span>
       </div>
     </div>
     <div class="hd">Cumulative past the counter <span class="hd-r"><span class="muted" id="chartsub"></span><span class="seg" role="group" aria-label="Chart range"><button type="button" data-view="sofar" aria-pressed="true">So far</button><button type="button" data-view="season" aria-pressed="false">Full season</button></span></span></div>
     <div class="bd" style="padding:14px 14px 4px"><canvas id="runchart" width="1000" height="440"></canvas></div>
     <div class="legend">
-      <span><span class="sw" style="background:var(--chinook)"></span> 2026 model (fish counted upstream, since Aug 24)</span>
+      <span><span class="sw" style="background:var(--chinook)"></span> 2026 model (fish up, all species, since Aug 24)</span>
       <span><span class="sw" style="background:var(--accent2)"></span> 2026 Riverwatcher counter (fish up, all species, since Aug 1)</span>
       <span><span class="swb"></span> 2020&ndash;2025 range</span>
       <span><span class="sw" style="background:var(--muted)"></span> past-years median</span>
@@ -236,15 +240,14 @@
 
 
   <h2>How the model works</h2>
-  <p class="prose" style="margin-top:8px">Every frame from the counter's underwater tunnel camera runs through the
-  same four steps &mdash; find the fish, read it, name it, and follow it. No infrared beam, no fixed clip length:
-  the model decides when a fish is there and captures the whole passage.</p>
+  <p class="prose" style="margin-top:8px">Every frame from the counter's underwater tunnel camera runs through one
+  network and one tracker &mdash; find and name the fish in a single look, then follow it. No infrared beam, no fixed
+  clip length: the model decides when a fish is there and captures the whole passage.</p>
   <div class="card chartcard"><div class="bd">
     <div class="pipe">
-      <div class="step"><div class="k">1  DETECT</div><div class="t">Find the fish</div><div class="d">An object detector scans every frame and draws a box around anything fish-shaped.</div></div>
-      <div class="step"><div class="k">2  CROP</div><div class="t">Cut it out</div><div class="d">The fish is cropped out on its own and shrunk to a small square, so the identifier sees only that fish &mdash; not the tunnel walls or another fish swimming past.</div></div>
-      <div class="step"><div class="k">3  IDENTIFY</div><div class="t">Read &amp; name it</div><div class="d">A DINOv3 vision model turns the crop into a 768-number &ldquo;fingerprint&rdquo; and names the species with a confidence.</div></div>
-      <div class="step"><div class="k">4  TRACK</div><div class="t">Follow &amp; count</div><div class="d">A tracker follows each fish across frames, so it&rsquo;s counted once and its direction &mdash; up or downstream &mdash; is resolved.</div></div>
+      <div class="step"><div class="k">1  DETECT &amp; IDENTIFY</div><div class="t">Find and name it, in one look</div><div class="d">A single DEIMv2 network, built on a DINOv3 vision backbone, reads the whole frame, draws a box around each fish and names its species with a confidence &mdash; all in the same pass. No separate crop-and-classify step.</div></div>
+      <div class="step"><div class="k">2  TRACK</div><div class="t">Follow it</div><div class="d">ByteTrack links each fish&rsquo;s boxes from frame to frame into one track, so a fish that lingers is still one fish, and its direction &mdash; up, down or holding &mdash; is read from where the track starts and ends.</div></div>
+      <div class="step"><div class="k">3  COUNT</div><div class="t">Keep the confident ones</div><div class="d">A track counts only if the fish was seen on at least three frames with a confident species read. In turbid water a weak read is still counted, but filed as Unclassified salmonid.</div></div>
     </div>
   </div></div>
 
@@ -268,7 +271,7 @@
           <div class="scolhd" style="color:var(--accent)">The model (new, read-only)</div>
           <div class="sbox new">iSpy<span>live camera view, no recording</span></div>
           <div class="sarrow">↓ <small>Tailscale secure link</small></div>
-          <div class="sbox new">Model on the RTX&nbsp;5090<span>detect → identify → track</span></div>
+          <div class="sbox new">Model on the RTX&nbsp;5090<span>detect + identify → track</span></div>
           <div class="stag new">↓ this live page</div>
         </div>
       </div>
@@ -281,23 +284,23 @@
       <div class="bd">
         <canvas id="fs3d"></canvas>
         <div class="legend" id="fs3dlegend" style="padding:9px 2px 2px"></div>
-        <p class="prose" style="margin-top:10px">DINOv3 maps each fish into a 768-dimension &ldquo;fingerprint&rdquo; space where
-        same-species fish land together. Above are <b>1,000 real fish</b> from the validation set, coloured by species &mdash;
-        that 768-D space squeezed down to 3 so you can spin it around. The clean clusters are <i>why</i> the model can tell
+        <p class="prose" style="margin-top:10px">DINOv3, the vision backbone inside the model, maps each fish into a high-dimensional
+        &ldquo;fingerprint&rdquo; space where same-species fish land together. Above are <b>1,000 real fish</b> from the
+        validation set, coloured by species &mdash; that space squeezed down to 3 so you can spin it around. The clean clusters are <i>why</i> the model can tell
         them apart; notice Chinook and Coho, the trickiest pair, sitting closest.</p>
       </div>
     </div>
     <div class="card">
       <div class="hd">How it was made</div>
       <div class="bd">
-        <p class="prose">The vision model, <b>DINOv3</b>, was pre-trained on 1.7&nbsp;billion images, so it already understands
-        shape, colour and texture. We then fine-tuned it on thousands of fish crops that technicians had labelled by species,
-        across both rivers and several seasons.</p>
+        <p class="prose">The model is <b>DEIMv2-X</b>, a real-time object detector built on a <b>DINOv3</b> vision backbone
+        that was pre-trained on 1.7&nbsp;billion images, so it already understands shape, colour and texture. We fine-tuned it
+        on thousands of fish frames that technicians had labelled by species, across both rivers and several seasons, so that
+        one network both finds the fish and names it.</p>
         <ul class="prose mk">
-          <li><b>Detector</b> &mdash; a DETR model finds the fish in each frame.</li>
-          <li><b>Classifier</b> &mdash; DINOv3 ViT-B/16 names the species from the crop.</li>
-          <li><b>Tracker</b> &mdash; BoT-SORT links a fish across frames to count it once and read its direction.</li>
-          <li><b>Accuracy</b> &mdash; about <b>98%</b> species agreement on held-out fish it never trained on.</li>
+          <li><b>Detector + classifier</b> &mdash; one DEIMv2-X network (DINOv3 ViT-S+/16 backbone) boxes and names each fish in a single pass.</li>
+          <li><b>Tracker</b> &mdash; ByteTrack links a fish across frames to count it once and read its direction.</li>
+          <li><b>Accuracy</b> &mdash; about <b>96%</b> species agreement on 366 held-out fish it never trained on.</li>
         </ul>
         <p class="prose" style="font-size:13px;color:var(--muted)">A research tool, not an official count. The
         &ldquo;Ganaraska River&rdquo; caption in the clips is burned in by the camera itself.</p>
@@ -308,7 +311,7 @@
 
 <!-- ATL_CAND_START -->
 <section>
-  <h2>Atlantic candidates</h2>
+  <h2>Atlant-o-vision</h2>
   <details class="atlc" style="margin-bottom:12px">
     <summary><span id="atlrev-count">0</span> reviewer-confirmed Atlantic passages &mdash; the season log</summary>
     <div class="atlrev-list" id="atlrev-list"></div>
@@ -366,7 +369,7 @@
 <!-- ATL_CAND_END -->
 
   <footer>
-    Model: a DETR object detector + a DINOv3 species classifier + BoT-SORT tracking, run on the live camera feed.
+    Model: one DEIMv2-X network (DINOv3 backbone) that finds and names each fish in a single pass, plus ByteTrack tracking, run on the live camera feed.
     Counts apply the validated confidence and track-length gates. Historical curves and the 2026 forecast come
     from the Lake Ontario run-pool analysis. The Riverwatcher line is the counter's own raw daily up-count from
     riverwatcherdaily.is (every species, not technician-validated), shown for comparison only. Clips tagged
@@ -381,6 +384,7 @@
   var HEX={0:"#E68200",1:"#00A8C8",2:"#28A745",3:"#B43CDC",4:"#B8901E",5:"#7A8088"};
   var DOY0=227, DOY1=319;
   var MODEL_START="2026-08-25";   // counting began Aug 24 3:45 PM; Aug 25 is the first full day
+  var COUNT_START="2026-08-24";   // first day with model counts (season readout)
   var chartView="sofar";
   try{ if(localStorage.getItem("gl-chart")==="season")chartView="season"; }catch(e){}
   function rwDaily(){ var m={}; ((rw&&rw.daily)||[]).forEach(function(r){m[r[0]]=r;}); return m; }
@@ -432,9 +436,11 @@
     var today=null; days.forEach(function(dy){if(dy.date===tiso)today=dy;});
     var tn=today?seen(today):0, td=today?dirOf(today):{up:0,down:0};
     var rwd=rwDaily(), rwt=rwd[tiso];
-    if((el=document.getElementById("dc-today-n")))el.textContent=tn;
-    if((el=document.getElementById("dc-today-up")))el.innerHTML=tn?ARR_UP+td.up+" up":"";
-    if((el=document.getElementById("dc-today-dn")))el.innerHTML=(tn&&td.down)?ARR_DN+td.down+" down":"";
+    if((el=document.getElementById("dc-today-up")))el.innerHTML=ARR_UP+fmt(td.up);
+    if((el=document.getElementById("dc-today-dn")))el.innerHTML=ARR_DN+fmt(td.down);
+    if((el=document.getElementById("dc-today-n")))el.textContent=fmt(tn);
+    if((el=document.getElementById("dc-today-tot"))){var held=Math.max(0,tn-td.up-td.down);
+      el.title="All fish the model identified today"+(held?": "+fmt(td.up)+" up, "+fmt(td.down)+" down and "+fmt(held)+" that held in the tunnel without passing":"");}
     if((el=document.getElementById("dc-today-sp")))el.textContent=tn?brk(today.sp):"quiet so far";
     if((el=document.getElementById("dc-today-rw")))el.textContent=rwt?("counter "+fmt(rwt[1])+" up"):"";
     if((el=document.getElementById("dc-asof"))&&cur.updated){var u=new Date(cur.updated);el.textContent="as of "+u.toLocaleTimeString([], {hour:"numeric", minute:"2-digit"});}
@@ -484,26 +490,20 @@
     if((el=document.getElementById("evbody")))el.innerHTML=evrows(cur.events);
     if((el=document.getElementById("evcount")))el.textContent=(cur.events||[]).length?("("+(cur.events||[]).length+")"):"";
     renderDaily();
-    // readouts: model (fish counted upstream, all species, same days) vs Riverwatcher (raw up-count)
-    var now=new Date(), tiso=now.getFullYear()+"-"+String(now.getMonth()+1).padStart(2,"0")+"-"+String(now.getDate()).padStart(2,"0");
-    var cu=0,cd=0,ctu=0,bySp={};
-    (cur.events||[]).forEach(function(e){ var d=String(e.iso||"").slice(0,10); if(d<MODEL_START)return;
-      if(e.direction==="up"){cu++; bySp[e.sp]=(bySp[e.sp]||0)+1; if(d===tiso)ctu++;} else if(e.direction==="down")cd++; });
+    // readouts: fall season totals - model (every fish it counted upstream, all species, whole season)
+    // vs Riverwatcher (raw season up-count). events.json is capped, so the season figures come from
+    // the cumulative up-series (run_series.json) and the season totals (net = up - down).
+    var cu=lastVal((cur.series&&cur.series.ganaraska)||[])||0;
+    var cnet=(cur.totals||[]).reduce(function(a,x){return a+(x.net_up||0);},0);
+    var cd=Math.max(0,cu-cnet);
     if((el=document.getElementById("ro-model")))el.textContent=fmt(cu);
-    if((el=document.getElementById("ro-model-s"))){
-      var parts=[]; [0,1,2,3,4,5].forEach(function(k){ if(bySp[k])parts.push(fmt(bySp[k])+" "+SPS[k]); });
-      el.textContent="today "+fmt(ctu)+" up · "+(parts.length?parts.join(" · ")+" · ":"")+fmt(cd)+" down"+
-        " · counting since "+shortDate(MODEL_START)+" · live, from the clips on this page";
-    }
+    if((el=document.getElementById("ro-model-s")))
+      el.textContent=fmt(cd)+" down · net "+fmt(cnet)+" · counting since "+shortDate(COUNT_START)+" · all species · live, from the clips on this page";
     if(rw&&rw.season){
-      var w=rwWindow();
-      if((el=document.getElementById("ro-rw")))el.textContent=fmt(w.up);
-      if((el=document.getElementById("ro-rw-s"))){
-        var td=(rw.summary||[]).filter(function(r){return /^today$/i.test(r.label);})[0];
-        el.innerHTML=(td?"today "+fmt(td.up)+" up · ":"")+fmt(w.down)+" down since "+esc(shortDate(MODEL_START))+
-          " · full season since Aug 1: "+fmt(rw.season.up)+" up, net "+fmt(rw.season.net)+" · as of "+esc(shortDate(rw.last_day))+
+      if((el=document.getElementById("ro-rw")))el.textContent=fmt(rw.season.up);
+      if((el=document.getElementById("ro-rw-s")))
+        el.innerHTML=fmt(rw.season.down!=null?rw.season.down:(rw.season.up-rw.season.net))+" down · net "+fmt(rw.season.net)+" · counting since Aug 1 · as of "+esc(shortDate(rw.last_day))+
           (rw.stale?" (stale)":"")+' · raw scanner count, all species · <a href="'+esc(rw.url||"https://www.riverwatcherdaily.is/?I=133")+'" target="_blank" rel="noopener">riverwatcherdaily.is</a>';
-      }
     }
     drawChart();
   }
@@ -645,7 +645,7 @@
   function legend(){ var el=document.getElementById("fs3dlegend"); if(!el) return;
     el.innerHTML=Object.keys(NAME).map(function(k){return '<span><span class="sw" style="width:10px;height:10px;border-radius:50%;background:'+HEX[k]+'"></span>'+NAME[k]+'</span>';}).join(""); }
   function draw(){
-    var W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=Math.min(W,H)*0.62,f=2.7;
+    var W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=Math.min(W,H)*0.48,f=2.7;
     g.clearRect(0,0,W,H);
     var ca=Math.cos(ay),sa=Math.sin(ay),cb=Math.cos(ax),sb=Math.sin(ax),pr=[];
     for(var i=0;i<pts.length;i++){var p=pts[i],x=p[0],y=p[1],z=p[2];
